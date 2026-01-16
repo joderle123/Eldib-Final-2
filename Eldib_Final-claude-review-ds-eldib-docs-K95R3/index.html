@@ -3628,7 +3628,8 @@ function getGoalsForDomain(domain) {
                 goals.push({
                     id: item.id,
                     nummer: item.id.split('-')[1],
-                    text: item.text,
+                    name: item.name,
+                    beschreibung: item.beschreibung,
                     stufe: stufe.nummer
                 });
             }
@@ -3648,7 +3649,8 @@ function getReachedItemsForDomain(domain) {
                 reached.push({
                     id: item.id,
                     nummer: item.id.split('-')[1],
-                    text: item.text,
+                    name: item.name,
+                    beschreibung: item.beschreibung,
                     stufe: stufe.nummer
                 });
             }
@@ -3690,7 +3692,7 @@ function generate42Section(student, devAges) {
             sectionHtml += '<p><strong>Erreichte Kompetenzen (' + reached.length + '):</strong></p>';
             sectionHtml += '<ul style="margin: 4pt 0 8pt 24pt; font-size:10pt;">';
             reached.slice(0, 5).forEach(function(item) {
-                sectionHtml += '<li><strong>' + getDomainCode(domain) + ' ' + item.nummer + '</strong> – ' + item.text + '</li>';
+                sectionHtml += '<li><strong>' + getDomainCode(domain) + '-' + item.nummer + ' (' + item.name + ')</strong>: ' + item.beschreibung + '</li>';
             });
             if (reached.length > 5) {
                 sectionHtml += '<li style="color:#666; font-style:italic;">... und ' + (reached.length - 5) + ' weitere erreichte Items</li>';
@@ -3703,7 +3705,7 @@ function generate42Section(student, devAges) {
         if (goals.length > 0) {
             sectionHtml += '<ul style="margin: 4pt 0 12pt 24pt; font-size:10pt;">';
             goals.forEach(function(goal) {
-                sectionHtml += '<li><strong>' + getDomainCode(domain) + ' ' + goal.nummer + '</strong> – ' + goal.text + '</li>';
+                sectionHtml += '<li><strong>' + getDomainCode(domain) + '-' + goal.nummer + ' (' + goal.name + ')</strong>: ' + goal.beschreibung + '</li>';
             });
             sectionHtml += '</ul>';
         } else {
@@ -3802,11 +3804,11 @@ function generateDSGridHTML(gridData) {
 
     // Header
     html += '<tr>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">V</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">K</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">SOZ</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">KOG</td>';
-    html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:center; padding:2pt; width:70pt; font-size:6pt;">Stufe</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">V</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">K</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">SOZ</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">KOG</td>';
+    html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:center; padding:2pt; width:70pt; font-size:7pt;">Stufe</td>';
     html += '</tr>';
 
     // Stufendefinitionen
