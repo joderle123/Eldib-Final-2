@@ -3078,47 +3078,47 @@ function exportDS() {
 }
 body {
     font-family: Calibri, 'Segoe UI', Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.5;
+    font-size: 10pt;
+    line-height: 1.3;
     color: #000;
     margin: 0;
     padding: 0;
 }
-p { margin: 0 0 11pt 0; }
+p { margin: 0 0 6pt 0; }
 
 /* Header rechts ausgerichtet */
 .header-right {
     text-align: right;
-    font-size: 11pt;
-    line-height: 1.5;
-    margin-bottom: 24pt;
+    font-size: 10pt;
+    line-height: 1.3;
+    margin-bottom: 12pt;
 }
 
 /* Titel zentriert */
 .title-main {
     text-align: center;
-    font-size: 16pt;
+    font-size: 14pt;
     font-weight: bold;
-    margin: 0 0 6pt 0;
+    margin: 0 0 4pt 0;
 }
 .title-sub {
     text-align: center;
-    font-size: 14pt;
+    font-size: 12pt;
     font-weight: normal;
-    margin: 0 0 24pt 0;
+    margin: 0 0 12pt 0;
 }
 
 /* Info-Tabelle ohne Rahmen, nur vertikale Linie */
 .info-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 24pt 0;
+    margin: 8pt 0;
 }
 .info-table td {
-    padding: 6pt 10pt;
+    padding: 3pt 8pt;
     border: none;
     vertical-align: top;
-    line-height: 1.5;
+    line-height: 1.3;
 }
 .info-table td:first-child {
     font-weight: bold;
@@ -3151,27 +3151,27 @@ p { margin: 0 0 11pt 0; }
 
 /* Überschriften */
 .heading1 {
-    font-size: 14pt;
-    font-weight: bold;
-    color: #2F5496;
-    margin: 18pt 0 6pt 0;
-    page-break-after: avoid;
-}
-.heading2 {
     font-size: 12pt;
     font-weight: bold;
     color: #2F5496;
-    margin: 12pt 0 6pt 0;
+    margin: 10pt 0 4pt 0;
+    page-break-after: avoid;
+}
+.heading2 {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #2F5496;
+    margin: 8pt 0 4pt 0;
     page-break-after: avoid;
 }
 
 /* Inhaltsverzeichnis */
 .toc {
-    margin: 12pt 0;
+    margin: 6pt 0;
 }
 .toc-entry {
-    margin: 3pt 0;
-    line-height: 1.5;
+    margin: 2pt 0;
+    line-height: 1.3;
 }
 .toc-indent {
     margin-left: 24pt;
@@ -3489,28 +3489,24 @@ Unité de diagnostic, de conseil et de suivi</p>
 
 <!-- SEITE 8: Testergebnisse (ELDiB) -->
 <div class="page-break"></div>
-<p class="heading2" style="margin-top:0;">6.2 Testergebnisse</p>
+<p style="font-size:10pt; font-weight:bold; color:#2F5496; margin:0 0 4pt 0;">6.2 Testergebnisse - ELDiB Raster</p>
 
-<p style="text-align: center; font-weight: bold; margin: 12pt 0;">Zusammenfassung der Entwicklungsziele des ELDiB ©<br>
-<span style="font-weight: normal;">(Entwicklungstherapeutischer / entwicklungspädagogischer Lernziel-Diagnose-Bogen)</span></p>
-
-<table class="info-table" style="margin: 12pt 0;">
-<tr><td style="width: 140pt;">Name des/der Schüler:in</td><td>${student.name || ''}</td></tr>
-<tr><td>Geburtsdatum (Alter)</td><td>${student.birthDate ? new Date(student.birthDate).toLocaleDateString('de-DE') : ''} (${biologicalAge ? biologicalAge.years + ' Jahre ' + biologicalAge.months + ' Monate' : ''})</td></tr>
-<tr><td>Datum der Einschätzung</td><td>${student.assessmentDate ? new Date(student.assessmentDate).toLocaleDateString('de-DE') : today}</td></tr>
+<table style="width:100%; border-collapse:collapse; margin:4pt 0; font-size:8pt;">
+<tr><td style="width:100pt; padding:2pt;"><strong>Name:</strong> ${student.name || ''}</td>
+<td style="padding:2pt;"><strong>Alter:</strong> ${biologicalAge ? biologicalAge.years + 'J ' + biologicalAge.months + 'M' : ''}</td>
+<td style="padding:2pt;"><strong>Datum:</strong> ${student.assessmentDate ? new Date(student.assessmentDate).toLocaleDateString('de-DE') : today}</td></tr>
 </table>
 
 ${generateDSGridHTML(gridData)}
 
-<div class="legend">
-<span>Legende: V-Verhalten; K-Kommunikation; SOZ-Sozialisation; KOG-Kognition</span><br>
-<span class="legend-item"><span class="legend-box erreicht"></span>grün = Entwicklungsziel erreicht</span>
-<span class="legend-item"><span class="legend-box ziel"></span>gelb = Förderziel</span>
+<div style="font-size:7pt; text-align:center; margin:4pt 0;">
+<span>V=Verhalten | K=Kommunikation | SOZ=Sozialisation | KOG=Kognition</span> |
+<span style="background:#70AD47; color:white; padding:1pt 3pt;">grün</span>=erreicht |
+<span style="background:#FFC000; padding:1pt 3pt;">gelb</span>=Ziel
 </div>
 
-<div class="copyright">
-© Distributed in the English original by the Developmental Therapy Institute, Inc., 1992.<br>
-© deutsche Ausgabe: Institut für Entwicklungstherapie/Entwicklungspädagogik e.V. (ETEP Europe) und Marita Bergsson
+<div style="font-size:6pt; text-align:center; color:#666;">
+© Developmental Therapy Institute 1992 | dt. Ausgabe: ETEP Europe & M. Bergsson
 </div>
 
 <!-- NEUE SEITE: Visueller Altersvergleich -->
@@ -3744,12 +3740,16 @@ function generateSMARTGoalsSection() {
     domains.forEach(function(domain) {
         var goals = getGoalsForDomain(domain);
         goals.forEach(function(goal) {
+            var itemId = goal.id;
+            var interventionData = INTERVENTIONS_DATA[itemId] || {};
             allGoals.push({
                 domain: domain,
                 code: getDomainCode(domain),
                 nummer: goal.nummer,
                 name: goal.name,
                 beschreibung: goal.beschreibung,
+                zielformulierung: interventionData.zielformulierung || goal.beschreibung,
+                interventionen: interventionData.interventionen || [],
                 stufe: goal.stufe
             });
         });
@@ -3759,18 +3759,19 @@ function generateSMARTGoalsSection() {
         return '<p style="color:#666; font-style:italic;">Keine Förderziele im ELDiB definiert.</p>';
     }
 
-    var html = '<table style="width:100%; border-collapse:collapse; margin:12pt 0; font-size:10pt;">';
+    var html = '<table style="width:100%; border-collapse:collapse; margin:6pt 0; font-size:9pt;">';
     html += '<tr style="background:#D9E2F3;">';
-    html += '<th style="border:1px solid #000; padding:6pt; text-align:left; width:15%;">Item</th>';
-    html += '<th style="border:1px solid #000; padding:6pt; text-align:left; width:20%;">Kompetenz</th>';
-    html += '<th style="border:1px solid #000; padding:6pt; text-align:left;">Zielformulierung</th>';
+    html += '<th style="border:1px solid #000; padding:4pt; text-align:left; width:10%;">Item</th>';
+    html += '<th style="border:1px solid #000; padding:4pt; text-align:left; width:25%;">Zielformulierung</th>';
+    html += '<th style="border:1px solid #000; padding:4pt; text-align:left;">Interventionen</th>';
     html += '</tr>';
 
     allGoals.forEach(function(goal) {
+        var interventionenText = goal.interventionen.length > 0 ? goal.interventionen.join('; ') : '-';
         html += '<tr>';
-        html += '<td style="border:1px solid #000; padding:6pt; font-weight:bold;">' + goal.code + '-' + goal.nummer + '</td>';
-        html += '<td style="border:1px solid #000; padding:6pt;">' + goal.name + '</td>';
-        html += '<td style="border:1px solid #000; padding:6pt;">' + goal.beschreibung + '</td>';
+        html += '<td style="border:1px solid #000; padding:4pt; font-weight:bold; vertical-align:top;">' + goal.code + '-' + goal.nummer + '</td>';
+        html += '<td style="border:1px solid #000; padding:4pt; vertical-align:top;">' + goal.zielformulierung + '</td>';
+        html += '<td style="border:1px solid #000; padding:4pt; font-size:8pt;">' + interventionenText + '</td>';
         html += '</tr>';
     });
 
@@ -3841,15 +3842,15 @@ function generateDSGridHTML(gridData) {
     });
 
     // Kompakte Tabelle - feste Breite, zentriert, passt auf eine A4-Seite
-    var html = '<table style="width:auto; margin:0 auto; border-collapse:collapse; font-size:6pt;">';
+    var html = '<table style="width:auto; margin:0 auto; border-collapse:collapse; font-size:5pt;">';
 
     // Header
     html += '<tr>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">V</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">K</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">SOZ</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:3pt; width:38pt;">KOG</td>';
-    html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:center; padding:2pt; width:70pt; font-size:7pt;">Stufe</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:28pt;">V</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:28pt;">K</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:28pt;">SOZ</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:28pt;">KOG</td>';
+    html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:center; padding:1pt; width:50pt; font-size:5pt;">Stufe</td>';
     html += '</tr>';
 
     // Stufendefinitionen
@@ -3878,9 +3879,9 @@ function generateDSGridHTML(gridData) {
                 var vStatus = statusLookup.verhalten ? (statusLookup.verhalten[vNum] || '') : '';
                 var vBg = vStatus === 'erreicht' ? '#70AD47' : (vStatus === 'ziel' ? '#FFC000' : '#fff');
                 var vCol = vStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; height:8pt; padding:0;">' + vNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; height:7pt; padding:0;">' + vNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
             }
 
             // K
@@ -3889,9 +3890,9 @@ function generateDSGridHTML(gridData) {
                 var kStatus = statusLookup.kommunikation ? (statusLookup.kommunikation[kNum] || '') : '';
                 var kBg = kStatus === 'erreicht' ? '#70AD47' : (kStatus === 'ziel' ? '#FFC000' : '#fff');
                 var kCol = kStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; height:8pt; padding:0;">' + kNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; height:7pt; padding:0;">' + kNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
             }
 
             // SOZ
@@ -3900,9 +3901,9 @@ function generateDSGridHTML(gridData) {
                 var sStatus = statusLookup.sozialisation ? (statusLookup.sozialisation[sNum] || '') : '';
                 var sBg = sStatus === 'erreicht' ? '#70AD47' : (sStatus === 'ziel' ? '#FFC000' : '#fff');
                 var sCol = sStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; height:8pt; padding:0;">' + sNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; height:7pt; padding:0;">' + sNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
             }
 
             // KOG
@@ -3911,9 +3912,9 @@ function generateDSGridHTML(gridData) {
                 var kogStatus = statusLookup.kognition ? (statusLookup.kognition[kogNum] || '') : '';
                 var kogBg = kogStatus === 'erreicht' ? '#70AD47' : (kogStatus === 'ziel' ? '#FFC000' : '#fff');
                 var kogCol = kogStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; height:8pt; padding:0;">' + kogNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; height:7pt; padding:0;">' + kogNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
             }
 
             // Stufe Label nur in erster Zeile
