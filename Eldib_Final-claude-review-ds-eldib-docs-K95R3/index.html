@@ -3688,16 +3688,14 @@ function generate42Section(student, devAges) {
         sectionHtml += 'Hier befindet sich der/die Schüler:in auf <strong>Entwicklungsstufe ' + getStageRoman(stage) + ' (' + getStageDescription(stage) + ')</strong> ';
         sectionHtml += 'mit einem Entwicklungsalter von <strong>' + age.toFixed(1) + ' Jahren</strong>.</p>';
 
-        // Erreichte Items anzeigen
+        // Erreichte Items anzeigen - nur die letzten 4 (höchste Nummern)
         if (reached.length > 0) {
-            sectionHtml += '<p><strong>Erreichte Kompetenzen (' + reached.length + '):</strong></p>';
+            var lastFour = reached.slice(-4);
+            sectionHtml += '<p><strong>Zuletzt erreichte Kompetenzen (' + reached.length + ' insgesamt):</strong></p>';
             sectionHtml += '<ul style="margin: 4pt 0 8pt 24pt; font-size:10pt;">';
-            reached.slice(0, 5).forEach(function(item) {
+            lastFour.forEach(function(item) {
                 sectionHtml += '<li><strong>' + getDomainCode(domain) + '-' + item.nummer + ' (' + item.name + ')</strong>: ' + item.beschreibung + '</li>';
             });
-            if (reached.length > 5) {
-                sectionHtml += '<li style="color:#666; font-style:italic;">... und ' + (reached.length - 5) + ' weitere erreichte Items</li>';
-            }
             sectionHtml += '</ul>';
         }
 
@@ -3842,8 +3840,8 @@ function generateDSGridHTML(gridData) {
         });
     });
 
-    // Kompakte Tabelle - feste Breite, zentriert
-    var html = '<table style="width:auto; margin:0 auto; border-collapse:collapse; font-size:7pt;">';
+    // Kompakte Tabelle - feste Breite, zentriert, passt auf eine A4-Seite
+    var html = '<table style="width:auto; margin:0 auto; border-collapse:collapse; font-size:6pt;">';
 
     // Header
     html += '<tr>';
@@ -3880,9 +3878,9 @@ function generateDSGridHTML(gridData) {
                 var vStatus = statusLookup.verhalten ? (statusLookup.verhalten[vNum] || '') : '';
                 var vBg = vStatus === 'erreicht' ? '#70AD47' : (vStatus === 'ziel' ? '#FFC000' : '#fff');
                 var vCol = vStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; height:11pt; padding:0;">' + vNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; height:8pt; padding:0;">' + vNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
             }
 
             // K
@@ -3891,9 +3889,9 @@ function generateDSGridHTML(gridData) {
                 var kStatus = statusLookup.kommunikation ? (statusLookup.kommunikation[kNum] || '') : '';
                 var kBg = kStatus === 'erreicht' ? '#70AD47' : (kStatus === 'ziel' ? '#FFC000' : '#fff');
                 var kCol = kStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; height:11pt; padding:0;">' + kNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; height:8pt; padding:0;">' + kNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
             }
 
             // SOZ
@@ -3902,9 +3900,9 @@ function generateDSGridHTML(gridData) {
                 var sStatus = statusLookup.sozialisation ? (statusLookup.sozialisation[sNum] || '') : '';
                 var sBg = sStatus === 'erreicht' ? '#70AD47' : (sStatus === 'ziel' ? '#FFC000' : '#fff');
                 var sCol = sStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; height:11pt; padding:0;">' + sNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; height:8pt; padding:0;">' + sNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
             }
 
             // KOG
@@ -3913,9 +3911,9 @@ function generateDSGridHTML(gridData) {
                 var kogStatus = statusLookup.kognition ? (statusLookup.kognition[kogNum] || '') : '';
                 var kogBg = kogStatus === 'erreicht' ? '#70AD47' : (kogStatus === 'ziel' ? '#FFC000' : '#fff');
                 var kogCol = kogStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; height:11pt; padding:0;">' + kogNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; height:8pt; padding:0;">' + kogNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:8pt;"></td>';
             }
 
             // Stufe Label nur in erster Zeile
