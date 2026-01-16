@@ -3673,79 +3673,63 @@ function generate42Section(student, devAges) {
     html += 'Entwicklung von Kindern und Jugendlichen im Alter zwischen Geburt und sechzehn Jahren zu erfassen. ';
     html += 'Er stellt ein Profil von spezifischen Fähigkeiten zur Verfügung, die als Indikatoren der sozialen und emotionalen Förderung dienen.</p>';
 
+    // Funktion für Bereichsdarstellung
+    function renderDomainSection(domain, age, label) {
+        var stage = getStageForAge(age);
+        var goals = getGoalsForDomain(domain);
+        var reached = getReachedItemsForDomain(domain);
+        var sectionHtml = '';
+
+        sectionHtml += '<p><strong>' + label + '</strong> bei ' + studentName + ' ist der ';
+        sectionHtml += '<strong>' + getDomainName(domain) + '</strong>. ';
+        sectionHtml += 'Hier befindet sich der/die Schüler:in auf <strong>Entwicklungsstufe ' + getStageRoman(stage) + ' (' + getStageDescription(stage) + ')</strong> ';
+        sectionHtml += 'mit einem Entwicklungsalter von <strong>' + age.toFixed(1) + ' Jahren</strong>.</p>';
+
+        // Erreichte Items anzeigen
+        if (reached.length > 0) {
+            sectionHtml += '<p><strong>Erreichte Kompetenzen (' + reached.length + '):</strong></p>';
+            sectionHtml += '<ul style="margin: 4pt 0 8pt 24pt; font-size:10pt;">';
+            reached.slice(0, 5).forEach(function(item) {
+                sectionHtml += '<li><strong>' + getDomainCode(domain) + ' ' + item.nummer + '</strong> – ' + item.text + '</li>';
+            });
+            if (reached.length > 5) {
+                sectionHtml += '<li style="color:#666; font-style:italic;">... und ' + (reached.length - 5) + ' weitere erreichte Items</li>';
+            }
+            sectionHtml += '</ul>';
+        }
+
+        // Ziele anzeigen
+        sectionHtml += '<p>Ausgehend vom Richtziel <em>„' + getStageRichtziel(stage) + '"</em>, ergaben sich folgende <strong>Lernziele:</strong></p>';
+        if (goals.length > 0) {
+            sectionHtml += '<ul style="margin: 4pt 0 12pt 24pt; font-size:10pt;">';
+            goals.forEach(function(goal) {
+                sectionHtml += '<li><strong>' + getDomainCode(domain) + ' ' + goal.nummer + '</strong> – ' + goal.text + '</li>';
+            });
+            sectionHtml += '</ul>';
+        } else {
+            sectionHtml += '<p style="margin-left:24pt; color:#666; font-style:italic;">Keine Ziele definiert für diesen Bereich.</p>';
+        }
+
+        return sectionHtml;
+    }
+
     // Höchster Bereich
     var highestDomain = sortedDomains[0];
     var highestAge = devAges[highestDomain];
-    var highestStage = getStageForAge(highestAge);
-    var highestGoals = getGoalsForDomain(highestDomain);
-
-    html += '<p><strong>Der am weitesten entwickelte Bereich</strong> bei ' + studentName + ', ist der ';
-    html += '<strong>' + getDomainName(highestDomain) + '</strong>, hier befindet sich der/die Schüler:in auf ';
-    html += '<strong>Entwicklungsstufe ' + getStageRoman(highestStage) + ' (' + getStageDescription(highestStage) + ')</strong> ';
-    html += 'mit einem Entwicklungsalter von <strong>' + highestAge.toFixed(1) + ' Jahren</strong>. ';
-    html += '<span class="placeholder-text">Er/Sie zeigt bereits gute ... . Dies wird beispielsweise deutlich durch ... . ';
-    html += 'Allerdings gelingt es ihm/ihr noch nicht immer, ... (anhand von 1-2 Beispielen darstellen).</span></p>';
-
-    html += '<p>Ausgehend vom Richtziel <em>„' + getStageRichtziel(highestStage) + '"</em> (siehe ELDiB Booklet), ergaben sich folgende Lernziele:</p>';
-    if (highestGoals.length > 0) {
-        html += '<ul style="margin: 6pt 0 12pt 24pt;">';
-        highestGoals.slice(0, 3).forEach(function(goal) {
-            html += '<li>' + getDomainCode(highestDomain) + ' ' + goal.nummer + ' – ' + goal.text + '</li>';
-        });
-        html += '</ul>';
-    } else {
-        html += '<ul style="margin: 6pt 0 12pt 24pt;"><li>' + getDomainCode(highestDomain) + ' <span class="placeholder-text">… – … (siehe ELDiB Booklet)</span></li></ul>';
-    }
+    html += renderDomainSection(highestDomain, highestAge, 'Der am weitesten entwickelte Bereich');
 
     // Mittlere Bereiche
     for (var i = 1; i < sortedDomains.length - 1; i++) {
         var domain = sortedDomains[i];
         var age = devAges[domain];
-        var stage = getStageForAge(age);
-        var goals = getGoalsForDomain(domain);
-
-        html += '<p><strong>Im Bereich ' + getDomainName(domain) + '</strong> befindet sich der/die Schüler:in auf der ';
-        html += '<strong>Entwicklungsstufe ' + getStageRoman(stage) + ' (' + getStageDescription(stage) + ')</strong> ';
-        html += 'mit einem Entwicklungsalter von <strong>' + age.toFixed(1) + ' Jahren</strong>. ';
-        html += '<span class="placeholder-text">Er/Sie zeigt bereits gute ... . Dies wird beispielsweise deutlich durch ... . ';
-        html += 'Allerdings gelingt es ihm/ihr noch nicht immer, ... (anhand von 1-2 Beispielen darstellen).</span></p>';
-
-        html += '<p>Ausgehend vom Richtziel <em>„' + getStageRichtziel(stage) + '"</em> (siehe ELDiB Booklet), ergaben sich folgende Lernziele:</p>';
-        if (goals.length > 0) {
-            html += '<ul style="margin: 6pt 0 12pt 24pt;">';
-            goals.slice(0, 3).forEach(function(goal) {
-                html += '<li>' + getDomainCode(domain) + ' ' + goal.nummer + ' – ' + goal.text + '</li>';
-            });
-            html += '</ul>';
-        } else {
-            html += '<ul style="margin: 6pt 0 12pt 24pt;"><li>' + getDomainCode(domain) + ' <span class="placeholder-text">… – … (siehe ELDiB Booklet)</span></li></ul>';
-        }
+        html += renderDomainSection(domain, age, 'Im Bereich');
     }
 
-    // Niedrigster Bereich (falls mehr als ein Bereich)
+    // Niedrigster Bereich
     if (sortedDomains.length > 1) {
         var lowestDomain = sortedDomains[sortedDomains.length - 1];
         var lowestAge = devAges[lowestDomain];
-        var lowestStage = getStageForAge(lowestAge);
-        var lowestGoals = getGoalsForDomain(lowestDomain);
-
-        html += '<p><strong>Der am niedrigsten entwickelte Bereich</strong> bei ' + studentName + ', ist der ';
-        html += '<strong>' + getDomainName(lowestDomain) + '</strong>, hier befindet sich der/die Schüler:in auf der ';
-        html += '<strong>Entwicklungsstufe ' + getStageRoman(lowestStage) + ' (' + getStageDescription(lowestStage) + ')</strong> ';
-        html += 'mit einem Entwicklungsalter von <strong>' + lowestAge.toFixed(1) + ' Jahren</strong>. ';
-        html += '<span class="placeholder-text">Er/Sie zeigt bereits gute ... . Dies wird beispielsweise deutlich durch ... . ';
-        html += 'Allerdings gelingt es ihm/ihr noch nicht immer, ... (anhand von 1-2 Beispielen darstellen).</span></p>';
-
-        html += '<p>Ausgehend vom Richtziel <em>„' + getStageRichtziel(lowestStage) + '"</em> (siehe ELDiB Booklet), ergaben sich folgende Lernziele:</p>';
-        if (lowestGoals.length > 0) {
-            html += '<ul style="margin: 6pt 0 12pt 24pt;">';
-            lowestGoals.slice(0, 3).forEach(function(goal) {
-                html += '<li>' + getDomainCode(lowestDomain) + ' ' + goal.nummer + ' – ' + goal.text + '</li>';
-            });
-            html += '</ul>';
-        } else {
-            html += '<ul style="margin: 6pt 0 12pt 24pt;"><li>' + getDomainCode(lowestDomain) + ' <span class="placeholder-text">… – … (siehe ELDiB Booklet)</span></li></ul>';
-        }
+        html += renderDomainSection(lowestDomain, lowestAge, 'Der am niedrigsten entwickelte Bereich');
     }
 
     return html;
@@ -3803,7 +3787,7 @@ function generateVisualAgeComparisonHTML(domainName, domainColor, bioAge, devAge
     '</div>';
 }
 
-// Hilfsfunktion fuer DS Grid HTML - ULTRA-Kompaktes Format für DIN A4 (MUSS auf eine Seite passen!)
+// Hilfsfunktion fuer DS Grid HTML - Kompakt für A4 Seite
 function generateDSGridHTML(gridData) {
     var statusLookup = {};
     Object.keys(gridData).forEach(function(domain) {
@@ -3813,25 +3797,25 @@ function generateDSGridHTML(gridData) {
         });
     });
 
-    // ULTRA-Kompakte Tabelle - minimale Größe für A4
-    var html = '<table style="width:100%; border-collapse:collapse; font-size:6pt; margin:4pt 0;">';
+    // Kompakte Tabelle - feste Breite, zentriert
+    var html = '<table style="width:auto; margin:0 auto; border-collapse:collapse; font-size:7pt;">';
 
-    // Header - kompakt
-    html += '<tr style="height:14pt;">';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:8%;">V</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:8%;">K</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:8%;">SOZ</td>';
-    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:8%;">KOG</td>';
-    html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:left; padding:2pt 4pt; font-size:6pt;">Stufe</td>';
+    // Header
+    html += '<tr>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">V</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">K</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">SOZ</td>';
+    html += '<td style="border:1px solid #000; background:#2c3e50; color:white; font-weight:bold; text-align:center; padding:2pt; width:22pt;">KOG</td>';
+    html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:center; padding:2pt; width:70pt; font-size:6pt;">Stufe</td>';
     html += '</tr>';
 
-    // Stufendefinitionen mit Item-Bereichen
+    // Stufendefinitionen
     var stufen = [
-        { nr: 5, label: 'V: 13-17 J.', v: [29,33], k: [30,35], s: [35,41], kog: [57,62] },
-        { nr: 4, label: 'IV: 10-12 J.', v: [23,28], k: [23,29], s: [28,34], kog: [50,56] },
-        { nr: 3, label: 'III: 6-9 J.', v: [15,22], k: [14,22], s: [18,27], kog: [37,49] },
-        { nr: 2, label: 'II: 3-5 J.', v: [8,14], k: [7,13], s: [9,17], kog: [20,36] },
-        { nr: 1, label: 'I: 0-2 J.', v: [1,7], k: [1,6], s: [1,8], kog: [1,19] }
+        { nr: 5, label: 'V (13-17)', v: [29,33], k: [30,35], s: [35,41], kog: [57,62] },
+        { nr: 4, label: 'IV (10-12)', v: [23,28], k: [23,29], s: [28,34], kog: [50,56] },
+        { nr: 3, label: 'III (6-9)', v: [15,22], k: [14,22], s: [18,27], kog: [37,49] },
+        { nr: 2, label: 'II (3-5)', v: [8,14], k: [7,13], s: [9,17], kog: [20,36] },
+        { nr: 1, label: 'I (0-2)', v: [1,7], k: [1,6], s: [1,8], kog: [1,19] }
     ];
 
     stufen.forEach(function(stufe) {
@@ -3843,7 +3827,7 @@ function generateDSGridHTML(gridData) {
         );
 
         for (var i = 0; i < maxRows; i++) {
-            html += '<tr style="height:9pt;">';
+            html += '<tr>';
 
             // V
             var vNum = stufe.v[1] - i;
@@ -3851,9 +3835,9 @@ function generateDSGridHTML(gridData) {
                 var vStatus = statusLookup.verhalten ? (statusLookup.verhalten[vNum] || '') : '';
                 var vBg = vStatus === 'erreicht' ? '#70AD47' : (vStatus === 'ziel' ? '#FFC000' : '#fff');
                 var vCol = vStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; padding:1pt;">' + vNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; height:11pt; padding:0;">' + vNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
             }
 
             // K
@@ -3862,9 +3846,9 @@ function generateDSGridHTML(gridData) {
                 var kStatus = statusLookup.kommunikation ? (statusLookup.kommunikation[kNum] || '') : '';
                 var kBg = kStatus === 'erreicht' ? '#70AD47' : (kStatus === 'ziel' ? '#FFC000' : '#fff');
                 var kCol = kStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; padding:1pt;">' + kNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; height:11pt; padding:0;">' + kNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
             }
 
             // SOZ
@@ -3873,9 +3857,9 @@ function generateDSGridHTML(gridData) {
                 var sStatus = statusLookup.sozialisation ? (statusLookup.sozialisation[sNum] || '') : '';
                 var sBg = sStatus === 'erreicht' ? '#70AD47' : (sStatus === 'ziel' ? '#FFC000' : '#fff');
                 var sCol = sStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; padding:1pt;">' + sNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; height:11pt; padding:0;">' + sNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
             }
 
             // KOG
@@ -3884,14 +3868,14 @@ function generateDSGridHTML(gridData) {
                 var kogStatus = statusLookup.kognition ? (statusLookup.kognition[kogNum] || '') : '';
                 var kogBg = kogStatus === 'erreicht' ? '#70AD47' : (kogStatus === 'ziel' ? '#FFC000' : '#fff');
                 var kogCol = kogStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; padding:1pt;">' + kogNum + '</td>';
+                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; height:11pt; padding:0;">' + kogNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6;"></td>';
+                html += '<td style="border:1px solid #000; background:#E7E6E6; height:11pt;"></td>';
             }
 
             // Stufe Label nur in erster Zeile
             if (i === 0) {
-                html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; padding:1pt 3pt; font-size:6pt;" rowspan="' + maxRows + '">' + stufe.label + '</td>';
+                html += '<td style="border:1px solid #000; background:#D9E2F3; font-weight:bold; text-align:center; padding:1pt; font-size:6pt;" rowspan="' + maxRows + '">' + stufe.label + '</td>';
             }
 
             html += '</tr>';
