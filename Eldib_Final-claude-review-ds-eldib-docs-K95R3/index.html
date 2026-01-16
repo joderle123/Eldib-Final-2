@@ -3451,7 +3451,8 @@ L-2165 Luxembourg
 <p class="placeholder-text">(Zusammenfassend in Bezug auf die Testergebnisse, Beobachtungen und Anamnese spezifische Bedürfnisse kurz beschreiben und welche Ressourcen der/die Schülerin hat.)</p>
 
 <p class="heading2">5.2 Ziele</p>
-<p class="placeholder-text">(SMART-Ziele ausgehend von den formulierten ELDiB Zielen)</p>
+<p>Ausgehend von den formulierten ELDiB-Zielen wurden folgende Förderziele definiert:</p>
+${generateSMARTGoalsSection()}
 
 <p class="heading2">5.3 Empfehlungen</p>
 <p class="placeholder-text">(Es ist wichtig die Maßnahmen zu gliedern nach dem familiären Kontext / schulischen Kontext / außerschulischer Kontext und ggfls. dem privaten Leben.)</p>
@@ -3734,6 +3735,48 @@ function generate42Section(student, devAges) {
         html += renderDomainSection(lowestDomain, lowestAge, 'Der am niedrigsten entwickelte Bereich');
     }
 
+    return html;
+}
+
+// Generiert den SMART-Ziele Abschnitt (5.2) aus allen ELDiB-Zielen
+function generateSMARTGoalsSection() {
+    var allGoals = [];
+    var domains = ['verhalten', 'kommunikation', 'sozialisation', 'kognition'];
+
+    domains.forEach(function(domain) {
+        var goals = getGoalsForDomain(domain);
+        goals.forEach(function(goal) {
+            allGoals.push({
+                domain: domain,
+                code: getDomainCode(domain),
+                nummer: goal.nummer,
+                name: goal.name,
+                beschreibung: goal.beschreibung,
+                stufe: goal.stufe
+            });
+        });
+    });
+
+    if (allGoals.length === 0) {
+        return '<p style="color:#666; font-style:italic;">Keine Förderziele im ELDiB definiert.</p>';
+    }
+
+    var html = '<table style="width:100%; border-collapse:collapse; margin:12pt 0; font-size:10pt;">';
+    html += '<tr style="background:#D9E2F3;">';
+    html += '<th style="border:1px solid #000; padding:6pt; text-align:left; width:15%;">Item</th>';
+    html += '<th style="border:1px solid #000; padding:6pt; text-align:left; width:20%;">Kompetenz</th>';
+    html += '<th style="border:1px solid #000; padding:6pt; text-align:left;">Zielformulierung</th>';
+    html += '</tr>';
+
+    allGoals.forEach(function(goal) {
+        html += '<tr>';
+        html += '<td style="border:1px solid #000; padding:6pt; font-weight:bold;">' + goal.code + '-' + goal.nummer + '</td>';
+        html += '<td style="border:1px solid #000; padding:6pt;">' + goal.name + '</td>';
+        html += '<td style="border:1px solid #000; padding:6pt;">' + goal.beschreibung + '</td>';
+        html += '</tr>';
+    });
+
+    html += '</table>';
     return html;
 }
 
