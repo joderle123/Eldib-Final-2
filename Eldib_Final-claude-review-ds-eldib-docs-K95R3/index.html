@@ -3065,488 +3065,245 @@ function exportDS() {
     const devAges = calculateAllDevelopmentalAges();
     const gridData = generateELDiBGrid();
 
-    // Exaktes HTML für DS-Dokument nach CDSE Template
-    let html = `<!DOCTYPE html>
-<html>
+    // Exaktes HTML für DS-Dokument nach CDSE Template - Word-kompatibel mit Inline-Styles
+    let html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
 <title>Spezialisierte Diagnostik - ${student.name || 'DS'}</title>
 <style>
-@page {
-    size: A4;
-    margin: 2cm 2.5cm 2cm 2.5cm;
-    @top-center {
-        content: "Spezialisierte Diagnostik - CDSE";
-        font-size: 9pt;
-        color: #808080;
-    }
-    @bottom-center {
-        content: "Seite " counter(page);
-        font-size: 9pt;
-        color: #808080;
-    }
-}
-body {
-    font-family: Calibri, 'Segoe UI', Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.5;
-    color: #000;
-    margin: 0;
-    padding: 0;
-}
-p { margin: 0 0 8pt 0; }
-
-/* Header rechts ausgerichtet */
-.header-right {
-    text-align: right;
-    font-size: 11pt;
-    line-height: 1.5;
-    margin-bottom: 18pt;
-}
-
-/* Titel zentriert */
-.title-main {
-    text-align: center;
-    font-size: 16pt;
-    font-weight: bold;
-    margin: 0 0 0 0;
-}
-.title-sub {
-    text-align: center;
-    font-size: 13pt;
-    font-weight: normal;
-    margin: 0 0 18pt 0;
-}
-
-/* Info-Tabelle mit vertikaler Linie */
-.info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12pt 0;
-    border-left: 2pt solid #AEAAAA;
-}
-.info-table td {
-    padding: 4pt 10pt;
-    border: none;
-    vertical-align: top;
-    line-height: 1.5;
-}
-.info-table td:first-child {
-    font-weight: bold;
-    width: 180pt;
-}
-
-/* Empfehlungen Box */
-.empfehlungen-box {
-    margin: 12pt 0;
-    padding: 0;
-}
-.empfehlungen-header {
-    font-weight: bold;
-    padding: 4pt 0;
-    border-bottom: 1pt solid #000;
-    margin-bottom: 4pt;
-}
-.checkbox-row {
-    padding: 2pt 0;
-    line-height: 1.5;
-}
-.checkbox-indent {
-    padding-left: 50pt;
-    font-size: 11pt;
-}
-
-/* Überschriften - Calibri Light, hellblau */
-.heading1 {
-    font-family: 'Calibri Light', Calibri, Arial, sans-serif;
-    font-size: 14pt;
-    font-weight: normal;
-    color: #5B9BD5;
-    margin: 12pt 0 6pt 0;
-    page-break-after: avoid;
-}
-.heading2 {
-    font-family: 'Calibri Light', Calibri, Arial, sans-serif;
-    font-size: 12pt;
-    font-weight: normal;
-    color: #5B9BD5;
-    margin: 10pt 0 4pt 0;
-    page-break-after: avoid;
-}
-
-/* Inhaltsverzeichnis */
-.toc {
-    margin: 12pt 0;
-}
-.toc-entry {
-    margin: 4pt 0;
-    line-height: 1.5;
-}
-.toc-indent {
-    margin-left: 24pt;
-}
-
-/* Platzhalter Text - schwarz kursiv */
-.placeholder-text {
-    color: #000;
-    font-style: italic;
-}
-
-/* Tabellen allgemein - grau */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12pt 0;
-    font-size: 10pt;
-}
-.data-table th, .data-table td {
-    border: 1pt solid #000;
-    padding: 6pt 8pt;
-    text-align: left;
-    vertical-align: top;
-}
-.data-table th {
-    background: #BFBFBF;
-    font-weight: bold;
-}
-
-/* ELDiB Grid */
-.eldib-grid {
-    border-collapse: collapse;
-    margin: 12pt auto;
-    font-size: 7pt;
-}
-.eldib-grid td, .eldib-grid th {
-    border: 0.5pt solid #000;
-    width: 18pt;
-    height: 14pt;
-    text-align: center;
-    padding: 1pt;
-    vertical-align: middle;
-}
-.eldib-grid .header-cell {
-    background: #4472C4;
-    color: white;
-    font-weight: bold;
-    font-size: 8pt;
-}
-.eldib-grid .stufe-cell {
-    background: #D9E2F3;
-    font-weight: bold;
-    font-size: 7pt;
-    width: 100pt;
-    text-align: left;
-    padding-left: 4pt;
-}
-.erreicht { background: #70AD47 !important; color: white; }
-.ziel { background: #FFC000 !important; color: #000; }
-.empty-cell { background: #E7E6E6; }
-
-/* Legende */
-.legend {
-    margin: 12pt 0;
-    font-size: 9pt;
-    text-align: center;
-}
-.legend-item {
-    display: inline-block;
-    margin: 0 12pt;
-}
-.legend-box {
-    display: inline-block;
-    width: 14pt;
-    height: 10pt;
-    border: 0.5pt solid #000;
-    vertical-align: middle;
-    margin-right: 4pt;
-}
-
-/* Altersbalken */
-.age-comparison {
-    margin: 18pt 0;
-}
-.age-comparison-title {
-    font-weight: bold;
-    margin-bottom: 12pt;
-}
-.age-bar-row {
-    margin: 6pt 0;
-    display: table;
-    width: 100%;
-}
-.age-bar-label {
-    display: table-cell;
-    width: 160pt;
-    font-size: 10pt;
-    vertical-align: middle;
-}
-.age-bar-container {
-    display: table-cell;
-    width: 200pt;
-    vertical-align: middle;
-}
-.age-bar-wrapper {
-    width: 200pt;
-    height: 16pt;
-    background: #E7E6E6;
-    border: 0.5pt solid #999;
-}
-.age-bar {
-    height: 100%;
-    display: block;
-}
-.age-bar.bio { background: #5B9BD5; }
-.age-bar.verhalten { background: #ED7D31; }
-.age-bar.kommunikation { background: #70AD47; }
-.age-bar.sozialisation { background: #9E480E; }
-.age-bar.kognition { background: #7030A0; }
-.age-value {
-    display: table-cell;
-    width: 60pt;
-    text-align: right;
-    font-size: 10pt;
-    vertical-align: middle;
-    padding-left: 8pt;
-}
-
-/* Copyright */
-.copyright {
-    font-size: 7pt;
-    text-align: center;
-    margin-top: 12pt;
-    color: #666;
-}
-
-/* Seitenumbruch */
-.page-break { page-break-before: always; }
-
-/* Unterschrift */
-.signature-block {
-    margin-top: 36pt;
-}
-.signature-line {
-    border-bottom: 1pt solid #000;
-    width: 200pt;
-    margin-bottom: 6pt;
-}
+@page { size: A4; margin: 2cm 2.5cm 2cm 2.5cm; }
+body { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; color: #000000; }
+p { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0; }
+table { font-family: Calibri, sans-serif; }
+br { mso-data-placement: same-cell; }
 </style>
 </head>
-<body>
+<body style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; color: #000000;">
 
 <!-- SEITE 1: Deckblatt -->
-<div class="header-right">
+<div style="text-align: right; font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin-bottom: 18pt;">
 <strong>Commission nationale d'inclusion</strong><br>
 33, Rives de Clausen<br>
 L-2165 Luxembourg
 </div>
 
-<p class="title-main">Spezialisierte Diagnostik</p>
-<p class="title-sub">des Zentrums für sozio-emotionale Entwicklung (CDSE)</p>
+<p style="text-align: center; font-family: Calibri, sans-serif; font-size: 16pt; font-weight: bold; margin: 0;">Spezialisierte Diagnostik</p>
+<p style="text-align: center; font-family: Calibri, sans-serif; font-size: 13pt; margin: 0 0 18pt 0;">des Zentrums für sozio-emotionale Entwicklung (CDSE)</p>
 
-<table class="info-table">
-<tr><td>Name des/der Schüler.in</td><td>${student.name || ''}</td></tr>
-<tr><td>Sozialversicherungsnummer</td><td>${student.birthDate ? new Date(student.birthDate).toLocaleDateString('de-DE').replace(/\./g, ' ').split(' ').reverse().join(' ') : ''}</td></tr>
-<tr><td>Alter</td><td>${biologicalAge ? biologicalAge.years + ' Jahre, ' + biologicalAge.months + ' Monate' : ''}</td></tr>
-<tr><td>Schule</td><td>${student.foerderort || ''}</td></tr>
-<tr><td>Klasse</td><td></td></tr>
-<tr><td>Sprachen</td><td><span class="placeholder-text">(Sprachkompetenzranking)</span></td></tr>
+<table style="width: 100%; border-collapse: collapse; margin: 12pt 0; border-left: 2pt solid #AEAAAA; font-family: Calibri, sans-serif; font-size: 11pt;">
+<tr><td style="padding: 4pt 10pt; font-weight: bold; width: 180pt; line-height: 150%;">Name des/der Schüler.in</td><td style="padding: 4pt 10pt; line-height: 150%;">${student.name || ''}</td></tr>
+<tr><td style="padding: 4pt 10pt; font-weight: bold; width: 180pt; line-height: 150%;">Sozialversicherungsnummer</td><td style="padding: 4pt 10pt; line-height: 150%;">${student.birthDate ? new Date(student.birthDate).toLocaleDateString('de-DE').replace(/\./g, ' ').split(' ').reverse().join(' ') : ''}</td></tr>
+<tr><td style="padding: 4pt 10pt; font-weight: bold; width: 180pt; line-height: 150%;">Alter</td><td style="padding: 4pt 10pt; line-height: 150%;">${biologicalAge ? biologicalAge.years + ' Jahre, ' + biologicalAge.months + ' Monate' : ''}</td></tr>
+<tr><td style="padding: 4pt 10pt; font-weight: bold; width: 180pt; line-height: 150%;">Schule</td><td style="padding: 4pt 10pt; line-height: 150%;">${student.foerderort || ''}</td></tr>
+<tr><td style="padding: 4pt 10pt; font-weight: bold; width: 180pt; line-height: 150%;">Klasse</td><td style="padding: 4pt 10pt; line-height: 150%;"></td></tr>
+<tr><td style="padding: 4pt 10pt; font-weight: bold; width: 180pt; line-height: 150%;">Sprachen</td><td style="padding: 4pt 10pt; line-height: 150%;"><i style="color: #000000;">(Sprachkompetenzranking)</i></td></tr>
 </table>
 
-<div class="empfehlungen-box">
-<div class="empfehlungen-header">Empfehlungen des CDSE</div>
-<div class="checkbox-row">☐ Spezialisierte Diagnostik in Zusammenarbeit mit einem Kompetenzzentrum</div>
-<div class="checkbox-row">☐ Beratung und Begleitung der Eltern und des/der betroffenen Schülers/-in</div>
-<div class="checkbox-row">☐ Beratung und Begleitung der Fachleute</div>
-<div class="checkbox-row">☐ Spezialisierte Lernwerkstatt</div>
-<div class="checkbox-row">☐ Spezialisierte ambulante Intervention (ISA)</div>
-<div class="checkbox-row">☐ Spezialisierte Beschulung im CDSE</div>
-<div class="checkbox-indent">☐ Classe de Participation (ClaPa)</div>
-<div class="checkbox-indent">☐ Centre socio-thérapeutique (CST)</div>
-<div class="checkbox-indent">☐ Annexe Junglinster</div>
-<div class="checkbox-row">☐ Spezialisierte Beschulung im Ausland</div>
-<div class="checkbox-row">☐ Abschluss der Aktivitäten des CDSE</div>
-<div class="checkbox-row">☐ Schließung der Akte im CDSE</div>
+<div style="margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 11pt;">
+<div style="font-weight: bold; padding: 4pt 0; border-bottom: 1pt solid #000000; margin-bottom: 4pt;">Empfehlungen des CDSE</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Spezialisierte Diagnostik in Zusammenarbeit mit einem Kompetenzzentrum</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Beratung und Begleitung der Eltern und des/der betroffenen Schülers/-in</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Beratung und Begleitung der Fachleute</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Spezialisierte Lernwerkstatt</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Spezialisierte ambulante Intervention (ISA)</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Spezialisierte Beschulung im CDSE</div>
+<div style="padding: 2pt 0 2pt 50pt; line-height: 150%;">☐ Classe de Participation (ClaPa)</div>
+<div style="padding: 2pt 0 2pt 50pt; line-height: 150%;">☐ Centre socio-thérapeutique (CST)</div>
+<div style="padding: 2pt 0 2pt 50pt; line-height: 150%;">☐ Annexe Junglinster</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Spezialisierte Beschulung im Ausland</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Abschluss der Aktivitäten des CDSE</div>
+<div style="padding: 2pt 0; line-height: 150%;">☐ Schließung der Akte im CDSE</div>
 </div>
 
 <!-- SEITE 2: Inhaltsverzeichnis -->
-<div class="page-break"></div>
-<p class="heading1" style="margin-top:0;">Inhaltsverzeichnis</p>
-<div class="toc">
-<div class="toc-entry">1. Auftragsklärung</div>
-<div class="toc-entry">2. Anamnese</div>
-<div class="toc-entry toc-indent">2.1 Vorgeschichte</div>
-<div class="toc-entry toc-indent">2.2 Sozialbericht</div>
-<div class="toc-entry">3. Aktuelle Situation</div>
-<div class="toc-entry toc-indent">3.1 Aktuelle schulische und außerschulische Unterstützungsmaßnahmen</div>
-<div class="toc-entry toc-indent">3.2 Sichtweise der Schule</div>
-<div class="toc-entry toc-indent">3.3 Sichtweise des Schülers/ der Schülerin</div>
-<div class="toc-entry toc-indent">3.4 Sichtweise der Eltern / Erziehungsberechtigten</div>
-<div class="toc-entry">4. Diagnostische Verfahren</div>
-<div class="toc-entry toc-indent">4.1 Verhaltensbeobachtungen</div>
-<div class="toc-entry toc-indent">4.2 Ergebnisse der Testverfahren</div>
-<div class="toc-entry toc-indent">4.3 Interpretation</div>
-<div class="toc-entry">5. Schlussfolgerung</div>
-<div class="toc-entry toc-indent">5.1 Spezifische Bedürfnisse des Schülers/der Schülerin</div>
-<div class="toc-entry toc-indent">5.2 Ziele</div>
-<div class="toc-entry toc-indent">5.3 Empfehlungen</div>
-<div class="toc-entry toc-indent">5.4 Empfehlungen - CNI</div>
-<div class="toc-entry">6. Anhänge</div>
-<div class="toc-entry toc-indent">6.1 Übersicht der Interventionen des CDSE</div>
-<div class="toc-entry toc-indent">6.2 Testergebnisse</div>
-<div class="toc-entry toc-indent">6.3 Produktionen des Schülers/der Schülerin</div>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">Inhaltsverzeichnis</p>
+<div style="margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%;">
+<p style="margin: 4pt 0; line-height: 150%;">1. Auftragsklärung</p>
+<p style="margin: 4pt 0; line-height: 150%;">2. Anamnese</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">2.1 Vorgeschichte</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">2.2 Sozialbericht</p>
+<p style="margin: 4pt 0; line-height: 150%;">3. Aktuelle Situation</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">3.1 Aktuelle schulische und außerschulische Unterstützungsmaßnahmen</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">3.2 Sichtweise der Schule</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">3.3 Sichtweise des Schülers/ der Schülerin</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">3.4 Sichtweise der Eltern / Erziehungsberechtigten</p>
+<p style="margin: 4pt 0; line-height: 150%;">4. Diagnostische Verfahren</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">4.1 Verhaltensbeobachtungen</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">4.2 Ergebnisse der Testverfahren</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">4.3 Interpretation</p>
+<p style="margin: 4pt 0; line-height: 150%;">5. Schlussfolgerung</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">5.1 Spezifische Bedürfnisse des Schülers/der Schülerin</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">5.2 Ziele</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">5.3 Empfehlungen</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">5.4 Empfehlungen - CNI</p>
+<p style="margin: 4pt 0; line-height: 150%;">6. Anhänge</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">6.1 Übersicht der Interventionen des CDSE</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">6.2 Testergebnisse</p>
+<p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">6.3 Produktionen des Schülers/der Schülerin</p>
 </div>
 
 <!-- SEITE 3: Auftragsklärung & Anamnese -->
-<div class="page-break"></div>
-<p class="heading1" style="margin-top:0;">1. Auftragsklärung</p>
-<p>Das Zentrum für sozio-emotionale Entwicklung wurde am <span class="placeholder-text">(Datum)</span> von der nationalen Kommission zur Inklusion (CNI) damit beauftragt, eine vertiefende Diagnostik bei <span class="placeholder-text">(Name des/der Schülers/Schülerin)</span> durchzuführen, um dessen aktuellen sozio-emotionalen Entwicklungsstand und Förderbedarf festzustellen. Der Anlass für die Beauftragung ist/sind <span class="placeholder-text">(spezifische Auffälligkeiten aus dem CI-Dokument kurz benennen)</span> in der Schule und/oder zu Hause, mit dem Anliegen eine <span class="placeholder-text">(ISA / Conseil & Guidance / CST)</span> einzuleiten. Die Anfrage erfolgte auf Empfehlung der betreuenden Fachkraft / Lehrperson / Arzt/Ärztin und/oder auf Wunsch der Eltern.</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">1. Auftragsklärung</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Das Zentrum für sozio-emotionale Entwicklung wurde am <i style="color: #000000;">(Datum)</i> von der nationalen Kommission zur Inklusion (CNI) damit beauftragt, eine vertiefende Diagnostik bei <i style="color: #000000;">(Name des/der Schülers/Schülerin)</i> durchzuführen, um dessen aktuellen sozio-emotionalen Entwicklungsstand und Förderbedarf festzustellen. Der Anlass für die Beauftragung ist/sind <i style="color: #000000;">(spezifische Auffälligkeiten aus dem CI-Dokument kurz benennen)</i> in der Schule und/oder zu Hause, mit dem Anliegen eine <i style="color: #000000;">(ISA / Conseil & Guidance / CST)</i> einzuleiten. Die Anfrage erfolgte auf Empfehlung der betreuenden Fachkraft / Lehrperson / Arzt/Ärztin und/oder auf Wunsch der Eltern.</p>
 
-<p class="heading1">2. Anamnese</p>
-<p class="heading2">2.1 Vorgeschichte</p>
-<p class="placeholder-text">(Frühkindliche/Kindliche Entwicklung, wenn es relevant ist / bereits gestellte Diagnosen / schulische und außerschulische Unterstützungsmaßnahmen aus den letzten drei Jahren chronologisch aufzählen in Tabellen Form oder in einem Fliesstext / SCAS / CPI / …)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 12pt 0 6pt 0;">2. Anamnese</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">2.1 Vorgeschichte</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Frühkindliche/Kindliche Entwicklung, wenn es relevant ist / bereits gestellte Diagnosen / schulische und außerschulische Unterstützungsmaßnahmen aus den letzten drei Jahren chronologisch aufzählen in Tabellen Form oder in einem Fliesstext / SCAS / CPI / …)</p>
 
-<table class="data-table">
-<tr><th>Zeitraum</th><th>Klasse</th><th>Maßnahme</th><th>Akteur</th></tr>
-<tr><td><span class="placeholder-text">Von … bis… oder seit …</span></td><td></td><td><span class="placeholder-text">SCAS, CPI, ESEB</span></td><td><span class="placeholder-text">Dir. XY, SPAD, …</span></td></tr>
+<table style="width: 100%; border-collapse: collapse; margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 10pt;">
+<tr><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Zeitraum</th><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Klasse</th><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Maßnahme</th><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Akteur</th></tr>
+<tr><td style="border: 1pt solid #000000; padding: 6pt 8pt;"><i style="color: #000000;">Von … bis… oder seit …</i></td><td style="border: 1pt solid #000000; padding: 6pt 8pt;"></td><td style="border: 1pt solid #000000; padding: 6pt 8pt;"><i style="color: #000000;">SCAS, CPI, ESEB</i></td><td style="border: 1pt solid #000000; padding: 6pt 8pt;"><i style="color: #000000;">Dir. XY, SPAD, …</i></td></tr>
 </table>
 
-<p class="heading2">2.2 Sozialbericht</p>
-<p class="placeholder-text">(Zusammensetzung der Familie / Familienstand / Besuchsrecht / Markante Ereignisse / Persönliche Situation der Eltern / Familienkonstellation / Berufliche Situation der Eltern / Arbeitszeiten / Organisation der Freizeit / Sprache zu Hause…)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">2.2 Sozialbericht</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Zusammensetzung der Familie / Familienstand / Besuchsrecht / Markante Ereignisse / Persönliche Situation der Eltern / Familienkonstellation / Berufliche Situation der Eltern / Arbeitszeiten / Organisation der Freizeit / Sprache zu Hause…)</p>
 
 <!-- SEITE 4: Aktuelle Situation -->
-<div class="page-break"></div>
-<p class="heading1" style="margin-top:0;">3. Aktuelle Situation</p>
-<p>Der/Die Schüler/Schülerin besucht derzeit die <span class="placeholder-text">...</span> Klasse der Schule in <span class="placeholder-text">... (Name und Ort der Schule)</span>, bei <span class="placeholder-text">… (Name der Lehrperson)</span> und seine Referenzperson ist <span class="placeholder-text">… (ESEB Referenzperson)</span>.</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">3. Aktuelle Situation</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Der/Die Schüler/Schülerin besucht derzeit die <i style="color: #000000;">...</i> Klasse der Schule in <i style="color: #000000;">... (Name und Ort der Schule)</i>, bei <i style="color: #000000;">… (Name der Lehrperson)</i> und seine Referenzperson ist <i style="color: #000000;">… (ESEB Referenzperson)</i>.</p>
 
-<p class="heading2">3.1 Aktuelle schulische und außerschulische Unterstützungsmaßnahmen</p>
-<p class="placeholder-text">(Aktuelle Unterstützungsmaßnahmen aus den letzten drei Jahren chronologisch aufzählen / SCAS / CPI / …)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">3.1 Aktuelle schulische und außerschulische Unterstützungsmaßnahmen</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Aktuelle Unterstützungsmaßnahmen aus den letzten drei Jahren chronologisch aufzählen / SCAS / CPI / …)</p>
 
-<table class="data-table">
-<tr><th>Zeitraum</th><th>Klasse</th><th>Maßnahme</th><th>Akteur</th></tr>
-<tr><td><span class="placeholder-text">Von … bis… oder seit …</span></td><td></td><td><span class="placeholder-text">SCAS, CPI, ESEB</span></td><td><span class="placeholder-text">Dir. XY, SPAD, …</span></td></tr>
+<table style="width: 100%; border-collapse: collapse; margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 10pt;">
+<tr><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Zeitraum</th><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Klasse</th><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Maßnahme</th><th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Akteur</th></tr>
+<tr><td style="border: 1pt solid #000000; padding: 6pt 8pt;"><i style="color: #000000;">Von … bis… oder seit …</i></td><td style="border: 1pt solid #000000; padding: 6pt 8pt;"></td><td style="border: 1pt solid #000000; padding: 6pt 8pt;"><i style="color: #000000;">SCAS, CPI, ESEB</i></td><td style="border: 1pt solid #000000; padding: 6pt 8pt;"><i style="color: #000000;">Dir. XY, SPAD, …</i></td></tr>
 </table>
 
-<p class="placeholder-text">(die folgenden 3 Punkte können ebenfalls in einem Fließtext verfasst werden, z.B. wenn sich alle drei Sichtweisen sehr ähnlich sind.)</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(die folgenden 3 Punkte können ebenfalls in einem Fließtext verfasst werden, z.B. wenn sich alle drei Sichtweisen sehr ähnlich sind.)</p>
 
-<p class="heading2">3.2 Sichtweise der Schule</p>
-<p class="placeholder-text">(Verhalten in der Schule / Leistungen in der Schule / Beziehungen/ Erwartungen / Anliegen / Aussichtspunkt der Lehrperson …)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">3.2 Sichtweise der Schule</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Verhalten in der Schule / Leistungen in der Schule / Beziehungen/ Erwartungen / Anliegen / Aussichtspunkt der Lehrperson …)</p>
 
-<p class="heading2">3.3 Sichtweise des Schülers/ der Schülerin</p>
-<p class="placeholder-text">(Leidensdruck / Eltern-Kind-Beziehung / Verhalten in der Schule / Lehrer:in-Schüler:in Verhalten / Hobbys / Freunde / Anliegen / Aussichtspunkt des/der Schülers/Schülerin/ …)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">3.3 Sichtweise des Schülers/ der Schülerin</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Leidensdruck / Eltern-Kind-Beziehung / Verhalten in der Schule / Lehrer:in-Schüler:in Verhalten / Hobbys / Freunde / Anliegen / Aussichtspunkt des/der Schülers/Schülerin/ …)</p>
 
-<p class="heading2">3.4 Sichtweise der Eltern / Erziehungsberechtigten</p>
-<p class="placeholder-text">(Verhalten zu Hause / Eltern-Kind-Beziehungen / Anliegen Erwartungen der Eltern / ...)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">3.4 Sichtweise der Eltern / Erziehungsberechtigten</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Verhalten zu Hause / Eltern-Kind-Beziehungen / Anliegen Erwartungen der Eltern / ...)</p>
 
 <!-- SEITE 5: Diagnostische Verfahren -->
-<div class="page-break"></div>
-<p class="heading1" style="margin-top:0;">4. Diagnostische Verfahren</p>
-<p>Diese Einschätzung wurde aufgrund von dem/den Tests/Methoden (z.B. ELDiB (Entwicklungstherapeutischer/Entwicklungspädagogischer Lernziel-Diagnose-Bogen, …) und der Beobachtungen im Klassenzimmer und in Zusammenarbeit mit den Lehrpersonen von <span class="placeholder-text">(Name des/der Schülers/Schülerin)</span> in <span class="placeholder-text">(Ortschaft)</span> durchgeführt.</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">4. Diagnostische Verfahren</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Diese Einschätzung wurde aufgrund von dem/den Tests/Methoden (z.B. ELDiB (Entwicklungstherapeutischer/Entwicklungspädagogischer Lernziel-Diagnose-Bogen, …) und der Beobachtungen im Klassenzimmer und in Zusammenarbeit mit den Lehrpersonen von <i style="color: #000000;">(Name des/der Schülers/Schülerin)</i> in <i style="color: #000000;">(Ortschaft)</i> durchgeführt.</p>
 
-<p class="heading2">4.1 Verhaltensbeobachtungen</p>
-<p class="placeholder-text">(objektiv, konkrete, relevante Verhaltensweisen beschreiben / sowohl die negativen als auch die positiven)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">4.1 Verhaltensbeobachtungen</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(objektiv, konkrete, relevante Verhaltensweisen beschreiben / sowohl die negativen als auch die positiven)</p>
 
-<p class="heading2">4.2 Ergebnisse der Testverfahren</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">4.2 Ergebnisse der Testverfahren</p>
 ` + generate42Section(student, devAges) + `
 
-<p class="heading2">4.3 Interpretation</p>
-<p class="placeholder-text">(von allen Informationen, Testergebnissen und Beobachtungen, Überschneidungen/Differenzen – wie kann man diese interpretieren? / ELDiB-Welche Abwehrmechanismen sind, wie genau, bei dem/der Schüler:in zu beobachten, die die jeweiligen Entwicklungsängste kompensieren?)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">4.3 Interpretation</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(von allen Informationen, Testergebnissen und Beobachtungen, Überschneidungen/Differenzen – wie kann man diese interpretieren? / ELDiB-Welche Abwehrmechanismen sind, wie genau, bei dem/der Schüler:in zu beobachten, die die jeweiligen Entwicklungsängste kompensieren?)</p>
 
 <!-- SEITE 6: Schlussfolgerung -->
-<div class="page-break"></div>
-<p class="heading1" style="margin-top:0;">5. Schlussfolgerung</p>
-<p>Auf Basis der erhobenen Testergebnisse, Beobachtungen und anamnestischen Informationen wurden in enger Abstimmung mit dem Schüler bzw. der Schülerin (ab etwa 12 Jahren) sowie den Eltern gezielte Förderbedarfe identifiziert. Daraus abgeleitet wurden gemeinsam Empfehlungen formuliert, die die individuelle Entwicklung wirksam unterstützen sollen.</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">5. Schlussfolgerung</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Auf Basis der erhobenen Testergebnisse, Beobachtungen und anamnestischen Informationen wurden in enger Abstimmung mit dem Schüler bzw. der Schülerin (ab etwa 12 Jahren) sowie den Eltern gezielte Förderbedarfe identifiziert. Daraus abgeleitet wurden gemeinsam Empfehlungen formuliert, die die individuelle Entwicklung wirksam unterstützen sollen.</p>
 
-<p class="heading2">5.1 Spezifische Bedürfnisse des Schülers/der Schülerin</p>
-<p class="placeholder-text">(Zusammenfassend in Bezug auf die Testergebnisse, Beobachtungen und Anamnese spezifische Bedürfnisse kurz beschreiben und welche Ressourcen der/die Schülerin hat.)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">5.1 Spezifische Bedürfnisse des Schülers/der Schülerin</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Zusammenfassend in Bezug auf die Testergebnisse, Beobachtungen und Anamnese spezifische Bedürfnisse kurz beschreiben und welche Ressourcen der/die Schülerin hat.)</p>
 
-<p class="heading2">5.2 Ziele</p>
-<p>Ausgehend von den formulierten ELDiB-Zielen wurden folgende Förderziele definiert:</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">5.2 Ziele</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Ausgehend von den formulierten ELDiB-Zielen wurden folgende Förderziele definiert:</p>
 ${generateSMARTGoalsSection()}
 
-<p class="heading2">5.3 Empfehlungen</p>
-<p class="placeholder-text">(Es ist wichtig die Maßnahmen zu gliedern nach dem familiären Kontext / schulischen Kontext / außerschulischer Kontext und ggfls. dem privaten Leben.)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">5.3 Empfehlungen</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Es ist wichtig die Maßnahmen zu gliedern nach dem familiären Kontext / schulischen Kontext / außerschulischer Kontext und ggfls. dem privaten Leben.)</p>
 
-<p class="heading2">5.4 Empfehlungen - CNI</p>
-<p class="placeholder-text">(Genaue Bezeichnung der CDSE Maßnahme, welche empfohlen wird / ggfls. eines Kompetenzzentrums, wenn weitere Diagnostik empfohlen wird...)</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">5.4 Empfehlungen - CNI</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Genaue Bezeichnung der CDSE Maßnahme, welche empfohlen wird / ggfls. eines Kompetenzzentrums, wenn weitere Diagnostik empfohlen wird...)</p>
 
-<div class="signature-block">
-<div class="signature-line"></div>
-<p style="margin:0;">Name des Verfassers des Berichts<br>
+<div style="margin-top: 36pt; font-family: Calibri, sans-serif; font-size: 11pt;">
+<div style="border-bottom: 1pt solid #000000; width: 200pt; margin-bottom: 6pt;"></div>
+<p style="margin: 0;">Name des Verfassers des Berichts<br>
 Berufsbezeichnung<br>
 Unité de diagnostic, de conseil et de suivi</p>
 </div>
 
 <!-- SEITE 7: Anhänge -->
-<div class="page-break"></div>
-<p class="heading1" style="margin-top:0;">6. Anhänge</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">6. Anhänge</p>
 
-<p class="heading2">6.1 Übersicht der Interventionen des CDSE</p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">6.1 Übersicht der Interventionen des CDSE</p>
 
-<table class="data-table" style="font-size: 9pt;">
+<table style="width: 100%; border-collapse: collapse; margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 9pt;">
 <tr>
-<th>Datum</th>
-<th>Klassenbeobachtungen</th>
-<th>Kontakte mit Erziehungsberechtigten</th>
-<th>Kontakte mit der Herkunftsschule</th>
-<th>Kontakte mit externem Fachpersonal</th>
-<th>Kontakte mit dem/der Schüler:in</th>
+<th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Datum</th>
+<th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Klassenbeobachtungen</th>
+<th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Kontakte mit Erziehungsberechtigten</th>
+<th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Kontakte mit der Herkunftsschule</th>
+<th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Kontakte mit externem Fachpersonal</th>
+<th style="border: 1pt solid #000000; padding: 6pt 8pt; background-color: #BFBFBF; font-weight: bold; text-align: left;">Kontakte mit dem/der Schüler:in</th>
 </tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td></tr>
+<tr><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td></tr>
+<tr><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td></tr>
 </table>
 
 <!-- SEITE 8: Testergebnisse (ELDiB) -->
-<div class="page-break"></div>
-<p class="heading2" style="margin-top:0;">6.2 Testergebnisse</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 0 0 4pt 0;">6.2 Testergebnisse</p>
 
-<p style="text-align:center; font-weight:bold; font-size:11pt; margin:8pt 0;">Zusammenfassung der Entwicklungsziele des ELDiB ©</p>
-<p style="text-align:center; font-size:10pt; margin:0 0 8pt 0;">(Entwicklungstherapeutischer / entwicklungspädagogischer Lernziel-Diagnose-Bogen)</p>
+<p style="text-align: center; font-family: Calibri, sans-serif; font-weight: bold; font-size: 11pt; margin: 8pt 0;">Zusammenfassung der Entwicklungsziele des ELDiB ©</p>
+<p style="text-align: center; font-family: Calibri, sans-serif; font-size: 10pt; margin: 0 0 8pt 0;">(Entwicklungstherapeutischer / entwicklungspädagogischer Lernziel-Diagnose-Bogen)</p>
 
-<table style="width:100%; border-collapse:collapse; margin:8pt 0; font-size:10pt;">
+<table style="width: 100%; border-collapse: collapse; margin: 8pt 0; font-family: Calibri, sans-serif; font-size: 10pt;">
 <tr>
-<td style="padding:3pt 0;"><strong>Name:</strong> ${student.name || ''}</td>
-<td style="padding:3pt 0;"><strong>Geburtsdatum:</strong> ${student.birthDate ? new Date(student.birthDate).toLocaleDateString('de-DE') : ''}</td>
-<td style="padding:3pt 0;"><strong>Alter:</strong> ${biologicalAge ? biologicalAge.years + ' J. ' + biologicalAge.months + ' M.' : ''}</td>
+<td style="padding: 3pt 0;"><strong>Name:</strong> ${student.name || ''}</td>
+<td style="padding: 3pt 0;"><strong>Geburtsdatum:</strong> ${student.birthDate ? new Date(student.birthDate).toLocaleDateString('de-DE') : ''}</td>
+<td style="padding: 3pt 0;"><strong>Alter:</strong> ${biologicalAge ? biologicalAge.years + ' J. ' + biologicalAge.months + ' M.' : ''}</td>
 </tr>
 <tr>
-<td colspan="3" style="padding:3pt 0;"><strong>Datum der Einschätzung:</strong> ${student.assessmentDate ? new Date(student.assessmentDate).toLocaleDateString('de-DE') : today}</td>
+<td colspan="3" style="padding: 3pt 0;"><strong>Datum der Einschätzung:</strong> ${student.assessmentDate ? new Date(student.assessmentDate).toLocaleDateString('de-DE') : today}</td>
 </tr>
 </table>
 
 ${generateDSGridHTML(gridData)}
 
-<div style="font-size:8pt; text-align:center; margin:6pt 0;">
+<div style="font-family: Calibri, sans-serif; font-size: 8pt; text-align: center; margin: 6pt 0;">
 <strong>Legende:</strong> V=Verhalten | K=Kommunikation | SOZ=Sozialisation | KOG=Kognition<br>
-<span style="background:#70AD47; color:white; padding:1pt 4pt;">grün</span> = erreicht &nbsp;&nbsp;
-<span style="background:#FFC000; padding:1pt 4pt;">gelb</span> = Förderziel
+<span style="background-color: #70AD47; color: white; padding: 1pt 4pt;">grün</span> = erreicht &nbsp;&nbsp;
+<span style="background-color: #FFC000; padding: 1pt 4pt;">gelb</span> = Förderziel
 </div>
 
-<div style="font-size:7pt; text-align:center; color:#808080; margin-top:8pt;">
+<div style="font-family: Calibri, sans-serif; font-size: 7pt; text-align: center; color: #808080; margin-top: 8pt;">
 © Distributed in the English original by the Developmental Therapy Institute, Inc., 1992.<br>
 © deutsche Ausgabe: Institut für Entwicklungstherapie/Entwicklungspädagogik e.V. (ETEP Europe) und Marita Bergsson
 </div>
 
 <!-- NEUE SEITE: Visueller Altersvergleich -->
-<div class="page-break"></div>
-<p class="heading2" style="margin-top:0;">6.2 Testergebnisse (Fortsetzung) - Visueller Altersvergleich</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 0 0 4pt 0;">6.2 Testergebnisse (Fortsetzung) - Visueller Altersvergleich</p>
 
-<p style="font-weight:bold; font-size:11pt; margin-bottom:12pt; border-bottom:2pt solid #5B9BD5; padding-bottom:6pt;">Visueller Altersvergleich pro Bereich</p>
+<p style="font-family: Calibri, sans-serif; font-weight: bold; font-size: 11pt; margin-bottom: 12pt; border-bottom: 2pt solid #5B9BD5; padding-bottom: 6pt;">Visueller Altersvergleich pro Bereich</p>
 
 ${generateVisualAgeComparisonHTML('Verhalten', '#e74c3c', biologicalAge ? biologicalAge.decimal : 0, devAges.verhalten || 0, 18)}
 ${generateVisualAgeComparisonHTML('Kommunikation', '#3498db', biologicalAge ? biologicalAge.decimal : 0, devAges.kommunikation || 0, 18)}
 ${generateVisualAgeComparisonHTML('Sozialisation', '#27ae60', biologicalAge ? biologicalAge.decimal : 0, devAges.sozialisation || 0, 18)}
 ${generateVisualAgeComparisonHTML('Kognition', '#9b59b6', biologicalAge ? biologicalAge.decimal : 0, devAges.kognition || 0, 18)}
 
-<div style="margin-top:15pt; font-size:9pt; color:#666;">
-<span style="display:inline-block; width:12px; height:12px; background:#3498db; vertical-align:middle; margin-right:5px;"></span> Biologisches Alter |
-<span style="margin-left:15px;"><span style="display:inline-block; width:12px; height:12px; background:#9b59b6; vertical-align:middle; margin-right:5px;"></span> Entwicklungsalter</span>
+<div style="margin-top: 15pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #666666;">
+<span style="display: inline-block; width: 12px; height: 12px; background-color: #3498db; vertical-align: middle; margin-right: 5px;"></span> Biologisches Alter |
+<span style="margin-left: 15px;"><span style="display: inline-block; width: 12px; height: 12px; background-color: #9b59b6; vertical-align: middle; margin-right: 5px;"></span> Entwicklungsalter</span>
 </div>
 
 <!-- SEITE 9: Produktionen -->
-<div class="page-break"></div>
-<p class="heading2" style="margin-top:0;">6.3 Produktionen des Schülers/der Schülerin</p>
-<p class="placeholder-text">(Hier können Zeichnungen, Texte oder andere Produktionen des Schülers/der Schülerin eingefügt werden.)</p>
+<p style="page-break-before: always;"></p>
+<p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 0 0 4pt 0;">6.3 Produktionen des Schülers/der Schülerin</p>
+<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Hier können Zeichnungen, Texte oder andere Produktionen des Schülers/der Schülerin eingefügt werden.)</p>
 
 </body>
 </html>`;
@@ -3678,29 +3435,29 @@ function getReachedItemsForDomain(domain) {
 function generate42Section(student, devAges) {
     var sortedDomains = getSortedDomainsByAge(devAges);
     if (sortedDomains.length === 0) {
-        return '<p class="placeholder-text">(Keine ELDiB-Daten vorhanden)</p>';
+        return '<p style="font-family: Calibri, sans-serif; font-size: 11pt; font-style: italic; color: #000000;">(Keine ELDiB-Daten vorhanden)</p>';
     }
 
     var html = '';
     var studentName = student.name || 'der/die Schüler:in';
 
     // ELDiB Einleitung
-    html += '<p><strong>ELDiB (Entwicklungstherapeutischer/Entwicklungspädagogischer Lernziel-Diagnose-Bogen):</strong> ';
+    html += '<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;"><strong>ELDiB (Entwicklungstherapeutischer/Entwicklungspädagogischer Lernziel-Diagnose-Bogen):</strong> ';
     html += 'Der ELDiB ist ein standardisiertes Einschätzungsinstrument, das dazu dient, die soziale und emotionale ';
     html += 'Entwicklung von Kindern und Jugendlichen im Alter zwischen Geburt und sechzehn Jahren zu erfassen. ';
     html += 'Er stellt ein Profil von spezifischen Fähigkeiten zur Verfügung, die als Indikatoren der sozialen und emotionalen Förderung dienen.</p>';
 
     // Übersicht der Entwicklungsbereiche
-    html += '<p>Die Einschätzung mit dem ELDiB ergab folgendes Entwicklungsprofil für ' + studentName + ':</p>';
+    html += '<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Die Einschätzung mit dem ELDiB ergab folgendes Entwicklungsprofil für ' + studentName + ':</p>';
 
     // Zusammenfassende Tabelle aller Bereiche
-    html += '<table style="width:100%; border-collapse:collapse; margin:8pt 0; font-size:10pt;">';
-    html += '<tr style="background:#BFBFBF;">';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:left;">Entwicklungsbereich</th>';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:center;">Stufe</th>';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:center;">Entwicklungsalter</th>';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:center;">Erreichte Items</th>';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:center;">Förderziele</th>';
+    html += '<table style="width: 100%; border-collapse: collapse; margin: 8pt 0; font-family: Calibri, sans-serif; font-size: 10pt;">';
+    html += '<tr>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: left; background-color: #BFBFBF; font-weight: bold;">Entwicklungsbereich</th>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: center; background-color: #BFBFBF; font-weight: bold;">Stufe</th>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: center; background-color: #BFBFBF; font-weight: bold;">Entwicklungsalter</th>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: center; background-color: #BFBFBF; font-weight: bold;">Erreichte Items</th>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: center; background-color: #BFBFBF; font-weight: bold;">Förderziele</th>';
     html += '</tr>';
 
     sortedDomains.forEach(function(domain) {
@@ -3709,11 +3466,11 @@ function generate42Section(student, devAges) {
         var goals = getGoalsForDomain(domain);
         var reached = getReachedItemsForDomain(domain);
         html += '<tr>';
-        html += '<td style="border:1px solid #000; padding:4pt;"><strong>' + getDomainName(domain) + '</strong></td>';
-        html += '<td style="border:1px solid #000; padding:4pt; text-align:center;">Stufe ' + getStageRoman(stage) + '</td>';
-        html += '<td style="border:1px solid #000; padding:4pt; text-align:center;">' + age.toFixed(1) + ' Jahre</td>';
-        html += '<td style="border:1px solid #000; padding:4pt; text-align:center;">' + reached.length + '</td>';
-        html += '<td style="border:1px solid #000; padding:4pt; text-align:center;">' + goals.length + '</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt;"><strong>' + getDomainName(domain) + '</strong></td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; text-align: center;">Stufe ' + getStageRoman(stage) + '</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; text-align: center;">' + age.toFixed(1) + ' Jahre</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; text-align: center;">' + reached.length + '</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; text-align: center;">' + goals.length + '</td>';
         html += '</tr>';
     });
     html += '</table>';
@@ -3736,7 +3493,7 @@ function generate42Section(student, devAges) {
             positionText = 'Im Bereich ';
         }
 
-        html += '<p>' + positionText + '<strong>' + domainLabel + '</strong>, wo sich ' + studentName + ' auf ';
+        html += '<p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">' + positionText + '<strong>' + domainLabel + '</strong>, wo sich ' + studentName + ' auf ';
         html += 'Entwicklungsstufe ' + getStageRoman(stage) + ' (' + getStageDescription(stage) + ') befindet mit einem ';
         html += 'Entwicklungsalter von ' + age.toFixed(1) + ' Jahren. Das Richtziel dieser Stufe lautet: ';
         html += '<em>„' + getStageRichtziel(stage) + '"</em>.';
@@ -3789,22 +3546,22 @@ function generateSMARTGoalsSection() {
     });
 
     if (allGoals.length === 0) {
-        return '<p style="color:#666; font-style:italic;">Keine Förderziele im ELDiB definiert.</p>';
+        return '<p style="font-family: Calibri, sans-serif; font-size: 11pt; color: #666666; font-style: italic;">Keine Förderziele im ELDiB definiert.</p>';
     }
 
-    var html = '<table style="width:100%; border-collapse:collapse; margin:6pt 0; font-size:9pt;">';
-    html += '<tr style="background:#BFBFBF;">';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:left; width:10%;">Item</th>';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:left; width:25%;">Zielformulierung</th>';
-    html += '<th style="border:1px solid #000; padding:4pt; text-align:left;">Interventionen</th>';
+    var html = '<table style="width: 100%; border-collapse: collapse; margin: 6pt 0; font-family: Calibri, sans-serif; font-size: 9pt;">';
+    html += '<tr>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: left; width: 10%; background-color: #BFBFBF; font-weight: bold;">Item</th>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: left; width: 25%; background-color: #BFBFBF; font-weight: bold;">Zielformulierung</th>';
+    html += '<th style="border: 1pt solid #000000; padding: 4pt; text-align: left; background-color: #BFBFBF; font-weight: bold;">Interventionen</th>';
     html += '</tr>';
 
     allGoals.forEach(function(goal) {
         var interventionenText = goal.interventionen.length > 0 ? goal.interventionen.join('; ') : '-';
         html += '<tr>';
-        html += '<td style="border:1px solid #000; padding:4pt; font-weight:bold; vertical-align:top;">' + goal.code + '-' + goal.nummer + '</td>';
-        html += '<td style="border:1px solid #000; padding:4pt; vertical-align:top;">' + goal.zielformulierung + '</td>';
-        html += '<td style="border:1px solid #000; padding:4pt; font-size:8pt;">' + interventionenText + '</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; font-weight: bold; vertical-align: top;">' + goal.code + '-' + goal.nummer + '</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; vertical-align: top;">' + goal.zielformulierung + '</td>';
+        html += '<td style="border: 1pt solid #000000; padding: 4pt; font-size: 8pt;">' + interventionenText + '</td>';
         html += '</tr>';
     });
 
@@ -3875,16 +3632,16 @@ function generateDSGridHTML(gridData) {
     });
 
     // Kompakte Tabelle - breit, zentriert, passt auf eine A4-Seite
-    var html = '<div style="display:flex; justify-content:center; align-items:center; min-height:500pt;">';
-    html += '<table style="width:auto; margin:0 auto; border-collapse:collapse; font-size:6pt;">';
+    var html = '<div style="text-align: center; margin: 20pt 0;">';
+    html += '<table style="margin: 0 auto; border-collapse: collapse; font-family: Calibri, sans-serif; font-size: 6pt;">';
 
     // Header
     html += '<tr>';
-    html += '<td style="border:1px solid #000; background:#2E74B5; color:white; font-weight:bold; text-align:center; padding:3pt; width:45pt;">V</td>';
-    html += '<td style="border:1px solid #000; background:#2E74B5; color:white; font-weight:bold; text-align:center; padding:3pt; width:45pt;">K</td>';
-    html += '<td style="border:1px solid #000; background:#2E74B5; color:white; font-weight:bold; text-align:center; padding:3pt; width:45pt;">SOZ</td>';
-    html += '<td style="border:1px solid #000; background:#2E74B5; color:white; font-weight:bold; text-align:center; padding:3pt; width:45pt;">KOG</td>';
-    html += '<td style="border:1px solid #000; background:#BFBFBF; color:#2E74B5; font-weight:bold; text-align:center; padding:2pt; width:80pt; font-size:6pt;">Stufe</td>';
+    html += '<td style="border: 1pt solid #000000; background-color: #5B9BD5; color: white; font-weight: bold; text-align: center; padding: 3pt; width: 45pt;">V</td>';
+    html += '<td style="border: 1pt solid #000000; background-color: #5B9BD5; color: white; font-weight: bold; text-align: center; padding: 3pt; width: 45pt;">K</td>';
+    html += '<td style="border: 1pt solid #000000; background-color: #5B9BD5; color: white; font-weight: bold; text-align: center; padding: 3pt; width: 45pt;">SOZ</td>';
+    html += '<td style="border: 1pt solid #000000; background-color: #5B9BD5; color: white; font-weight: bold; text-align: center; padding: 3pt; width: 45pt;">KOG</td>';
+    html += '<td style="border: 1pt solid #000000; background-color: #BFBFBF; color: #5B9BD5; font-weight: bold; text-align: center; padding: 2pt; width: 80pt; font-size: 6pt;">Stufe</td>';
     html += '</tr>';
 
     // Stufendefinitionen
@@ -3911,49 +3668,49 @@ function generateDSGridHTML(gridData) {
             var vNum = stufe.v[1] - i;
             if (vNum >= stufe.v[0]) {
                 var vStatus = statusLookup.verhalten ? (statusLookup.verhalten[vNum] || '') : '';
-                var vBg = vStatus === 'erreicht' ? '#70AD47' : (vStatus === 'ziel' ? '#FFC000' : '#fff');
-                var vCol = vStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + vBg + '; color:' + vCol + '; height:7pt; padding:0;">' + vNum + '</td>';
+                var vBg = vStatus === 'erreicht' ? '#70AD47' : (vStatus === 'ziel' ? '#FFC000' : '#FFFFFF');
+                var vCol = vStatus === 'erreicht' ? '#FFFFFF' : '#000000';
+                html += '<td style="border: 1pt solid #000000; text-align: center; background-color: ' + vBg + '; color: ' + vCol + '; height: 7pt; padding: 0;">' + vNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
+                html += '<td style="border: 1pt solid #000000; background-color: #E7E6E6; height: 7pt;"></td>';
             }
 
             // K
             var kNum = stufe.k[1] - i;
             if (kNum >= stufe.k[0]) {
                 var kStatus = statusLookup.kommunikation ? (statusLookup.kommunikation[kNum] || '') : '';
-                var kBg = kStatus === 'erreicht' ? '#70AD47' : (kStatus === 'ziel' ? '#FFC000' : '#fff');
-                var kCol = kStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kBg + '; color:' + kCol + '; height:7pt; padding:0;">' + kNum + '</td>';
+                var kBg = kStatus === 'erreicht' ? '#70AD47' : (kStatus === 'ziel' ? '#FFC000' : '#FFFFFF');
+                var kCol = kStatus === 'erreicht' ? '#FFFFFF' : '#000000';
+                html += '<td style="border: 1pt solid #000000; text-align: center; background-color: ' + kBg + '; color: ' + kCol + '; height: 7pt; padding: 0;">' + kNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
+                html += '<td style="border: 1pt solid #000000; background-color: #E7E6E6; height: 7pt;"></td>';
             }
 
             // SOZ
             var sNum = stufe.s[1] - i;
             if (sNum >= stufe.s[0]) {
                 var sStatus = statusLookup.sozialisation ? (statusLookup.sozialisation[sNum] || '') : '';
-                var sBg = sStatus === 'erreicht' ? '#70AD47' : (sStatus === 'ziel' ? '#FFC000' : '#fff');
-                var sCol = sStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + sBg + '; color:' + sCol + '; height:7pt; padding:0;">' + sNum + '</td>';
+                var sBg = sStatus === 'erreicht' ? '#70AD47' : (sStatus === 'ziel' ? '#FFC000' : '#FFFFFF');
+                var sCol = sStatus === 'erreicht' ? '#FFFFFF' : '#000000';
+                html += '<td style="border: 1pt solid #000000; text-align: center; background-color: ' + sBg + '; color: ' + sCol + '; height: 7pt; padding: 0;">' + sNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
+                html += '<td style="border: 1pt solid #000000; background-color: #E7E6E6; height: 7pt;"></td>';
             }
 
             // KOG
             var kogNum = stufe.kog[1] - i;
             if (kogNum >= stufe.kog[0]) {
                 var kogStatus = statusLookup.kognition ? (statusLookup.kognition[kogNum] || '') : '';
-                var kogBg = kogStatus === 'erreicht' ? '#70AD47' : (kogStatus === 'ziel' ? '#FFC000' : '#fff');
-                var kogCol = kogStatus === 'erreicht' ? '#fff' : '#000';
-                html += '<td style="border:1px solid #000; text-align:center; background:' + kogBg + '; color:' + kogCol + '; height:7pt; padding:0;">' + kogNum + '</td>';
+                var kogBg = kogStatus === 'erreicht' ? '#70AD47' : (kogStatus === 'ziel' ? '#FFC000' : '#FFFFFF');
+                var kogCol = kogStatus === 'erreicht' ? '#FFFFFF' : '#000000';
+                html += '<td style="border: 1pt solid #000000; text-align: center; background-color: ' + kogBg + '; color: ' + kogCol + '; height: 7pt; padding: 0;">' + kogNum + '</td>';
             } else {
-                html += '<td style="border:1px solid #000; background:#E7E6E6; height:7pt;"></td>';
+                html += '<td style="border: 1pt solid #000000; background-color: #E7E6E6; height: 7pt;"></td>';
             }
 
             // Stufe Label nur in erster Zeile
             if (i === 0) {
-                html += '<td style="border:1px solid #000; background:#BFBFBF; font-weight:bold; text-align:center; padding:1pt; font-size:6pt;" rowspan="' + maxRows + '">' + stufe.label + '</td>';
+                html += '<td style="border: 1pt solid #000000; background-color: #BFBFBF; font-weight: bold; text-align: center; padding: 1pt; font-size: 6pt;" rowspan="' + maxRows + '">' + stufe.label + '</td>';
             }
 
             html += '</tr>';
