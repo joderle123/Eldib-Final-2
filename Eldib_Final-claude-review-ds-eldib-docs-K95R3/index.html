@@ -3081,29 +3081,16 @@ function exportDS() {
 <![endif]-->
 <title>Spezialisierte Diagnostik - ${student.name || 'DS'}</title>
 <style>
-@page { size: A4; margin: 2.5cm 2.5cm 2.5cm 2.5cm; mso-header-margin: 1cm; mso-footer-margin: 1cm; }
+@page { size: A4; margin: 2.5cm 2.5cm 2.5cm 2.5cm; }
 body { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; color: #000000; }
 p { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0; }
 table { font-family: Calibri, sans-serif; }
-br { mso-data-placement: same-cell; }
-div.header { position: running(header); }
-div.footer { position: running(footer); }
-@page { @top-center { content: element(header); } @bottom-center { content: element(footer); } }
+br.page { page-break-before: always; mso-special-character: line-break; }
 </style>
 </head>
 <body style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; color: #000000;">
 
-<!-- Header für alle Seiten -->
-<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
-<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
-<tr>
-<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
-<td style="text-align: right;">${student.name || ''}</td>
-</tr>
-</table>
-</div>
-
-<!-- SEITE 1: Deckblatt -->
+<!-- ==================== SEITE 1: Deckblatt ==================== -->
 <div style="text-align: right; font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin-bottom: 18pt;">
 <strong>Commission nationale d'inclusion</strong><br>
 33, Rives de Clausen<br>
@@ -3138,23 +3125,8 @@ L-2165 Luxembourg
 <div style="padding: 2pt 0; line-height: 150%;">☐ Schließung der Akte im CDSE</div>
 </div>
 
-<!-- Footer Seite 1 -->
-<div style="position: absolute; bottom: 0; width: 100%; border-top: 1pt solid #BFBFBF; padding-top: 6pt; margin-top: 24pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080; text-align: center;">
-Seite 1
-</div>
-
-<!-- ========== SEITE 2: Inhaltsverzeichnis (ALLEINSTEHEND) ========== -->
-<p style="page-break-before: always;"></p>
-
-<!-- Header Seite 2 -->
-<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
-<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
-<tr>
-<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
-<td style="text-align: right;">${student.name || ''}</td>
-</tr>
-</table>
-</div>
+<!-- ==================== SEITE 2: Inhaltsverzeichnis (ALLEINSTEHEND) ==================== -->
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">Inhaltsverzeichnis</p>
 <div style="margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%;">
@@ -3182,23 +3154,8 @@ Seite 1
 <p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">6.3 Produktionen des Schülers/der Schülerin</p>
 </div>
 
-<!-- Footer Seite 2 -->
-<div style="width: 100%; border-top: 1pt solid #BFBFBF; padding-top: 6pt; margin-top: 24pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080; text-align: center;">
-Seite 2
-</div>
-
-<!-- ========== SEITE 3: Auftragsklärung & Anamnese ========== -->
-<p style="page-break-before: always;"></p>
-
-<!-- Header Seite 3 -->
-<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
-<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
-<tr>
-<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
-<td style="text-align: right;">${student.name || ''}</td>
-</tr>
-</table>
-</div>
+<!-- ==================== SEITE 3: Auftragsklärung & Anamnese ==================== -->
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">1. Auftragsklärung</p>
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Das Zentrum für sozio-emotionale Entwicklung wurde am <i style="color: #000000;">(Datum)</i> von der nationalen Kommission zur Inklusion (CNI) damit beauftragt, eine vertiefende Diagnostik bei <i style="color: #000000;">(Name des/der Schülers/Schülerin)</i> durchzuführen, um dessen aktuellen sozio-emotionalen Entwicklungsstand und Förderbedarf festzustellen. Der Anlass für die Beauftragung ist/sind <i style="color: #000000;">(spezifische Auffälligkeiten aus dem CI-Dokument kurz benennen)</i> in der Schule und/oder zu Hause, mit dem Anliegen eine <i style="color: #000000;">(ISA / Conseil & Guidance / CST)</i> einzuleiten. Die Anfrage erfolgte auf Empfehlung der betreuenden Fachkraft / Lehrperson / Arzt/Ärztin und/oder auf Wunsch der Eltern.</p>
 
@@ -3215,7 +3172,7 @@ Seite 2
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Zusammensetzung der Familie / Familienstand / Besuchsrecht / Markante Ereignisse / Persönliche Situation der Eltern / Familienkonstellation / Berufliche Situation der Eltern / Arbeitszeiten / Organisation der Freizeit / Sprache zu Hause…)</p>
 
 <!-- SEITE 4: Aktuelle Situation -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">3. Aktuelle Situation</p>
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Der/Die Schüler/Schülerin besucht derzeit die <i style="color: #000000;">...</i> Klasse der Schule in <i style="color: #000000;">... (Name und Ort der Schule)</i>, bei <i style="color: #000000;">… (Name der Lehrperson)</i> und seine Referenzperson ist <i style="color: #000000;">… (ESEB Referenzperson)</i>.</p>
 
@@ -3239,7 +3196,7 @@ Seite 2
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Verhalten zu Hause / Eltern-Kind-Beziehungen / Anliegen Erwartungen der Eltern / ...)</p>
 
 <!-- SEITE 5: Diagnostische Verfahren -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">4. Diagnostische Verfahren</p>
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Diese Einschätzung wurde aufgrund von dem/den Tests/Methoden (z.B. ELDiB (Entwicklungstherapeutischer/Entwicklungspädagogischer Lernziel-Diagnose-Bogen, …) und der Beobachtungen im Klassenzimmer und in Zusammenarbeit mit den Lehrpersonen von <i style="color: #000000;">(Name des/der Schülers/Schülerin)</i> in <i style="color: #000000;">(Ortschaft)</i> durchgeführt.</p>
 
@@ -3253,7 +3210,7 @@ Seite 2
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(von allen Informationen, Testergebnissen und Beobachtungen, Überschneidungen/Differenzen – wie kann man diese interpretieren? / ELDiB-Welche Abwehrmechanismen sind, wie genau, bei dem/der Schüler:in zu beobachten, die die jeweiligen Entwicklungsängste kompensieren?)</p>
 
 <!-- SEITE 6: Schlussfolgerung -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">5. Schlussfolgerung</p>
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Auf Basis der erhobenen Testergebnisse, Beobachtungen und anamnestischen Informationen wurden in enger Abstimmung mit dem Schüler bzw. der Schülerin (ab etwa 12 Jahren) sowie den Eltern gezielte Förderbedarfe identifiziert. Daraus abgeleitet wurden gemeinsam Empfehlungen formuliert, die die individuelle Entwicklung wirksam unterstützen sollen.</p>
 
@@ -3278,7 +3235,7 @@ Unité de diagnostic, de conseil et de suivi</p>
 </div>
 
 <!-- SEITE 7: Anhänge -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">6. Anhänge</p>
 
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 10pt 0 4pt 0;">6.1 Übersicht der Interventionen des CDSE</p>
@@ -3298,7 +3255,7 @@ Unité de diagnostic, de conseil et de suivi</p>
 </table>
 
 <!-- ========== SEITE: ELDiB-RASTER (ALLEINSTEHEND) ========== -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 
 <!-- Header ELDiB-Raster Seite -->
 <div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
@@ -3345,7 +3302,7 @@ ELDiB-Raster
 </div>
 
 <!-- ========== NEUE SEITE: Visueller Altersvergleich ========== -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 
 <!-- Header Altersvergleich Seite -->
 <div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
@@ -3371,7 +3328,7 @@ ${generateVisualAgeComparisonHTML('Kognition', '#9b59b6', biologicalAge ? biolog
 </div>
 
 <!-- SEITE 9: Produktionen -->
-<p style="page-break-before: always;"></p>
+<br clear="all" style="mso-special-character:line-break;page-break-before:always">
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 0 0 4pt 0;">6.3 Produktionen des Schülers/der Schülerin</p>
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; font-style: italic; color: #000000;">(Hier können Zeichnungen, Texte oder andere Produktionen des Schülers/der Schülerin eingefügt werden.)</p>
 
