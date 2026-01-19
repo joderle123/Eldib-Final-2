@@ -3081,14 +3081,27 @@ function exportDS() {
 <![endif]-->
 <title>Spezialisierte Diagnostik - ${student.name || 'DS'}</title>
 <style>
-@page { size: A4; margin: 2cm 2.5cm 2cm 2.5cm; }
+@page { size: A4; margin: 2.5cm 2.5cm 2.5cm 2.5cm; mso-header-margin: 1cm; mso-footer-margin: 1cm; }
 body { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; color: #000000; }
 p { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0; }
 table { font-family: Calibri, sans-serif; }
 br { mso-data-placement: same-cell; }
+div.header { position: running(header); }
+div.footer { position: running(footer); }
+@page { @top-center { content: element(header); } @bottom-center { content: element(footer); } }
 </style>
 </head>
 <body style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; color: #000000;">
+
+<!-- Header für alle Seiten -->
+<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<tr>
+<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
+<td style="text-align: right;">${student.name || ''}</td>
+</tr>
+</table>
+</div>
 
 <!-- SEITE 1: Deckblatt -->
 <div style="text-align: right; font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin-bottom: 18pt;">
@@ -3125,8 +3138,24 @@ L-2165 Luxembourg
 <div style="padding: 2pt 0; line-height: 150%;">☐ Schließung der Akte im CDSE</div>
 </div>
 
-<!-- SEITE 2: Inhaltsverzeichnis -->
+<!-- Footer Seite 1 -->
+<div style="position: absolute; bottom: 0; width: 100%; border-top: 1pt solid #BFBFBF; padding-top: 6pt; margin-top: 24pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080; text-align: center;">
+Seite 1
+</div>
+
+<!-- ========== SEITE 2: Inhaltsverzeichnis (ALLEINSTEHEND) ========== -->
 <p style="page-break-before: always;"></p>
+
+<!-- Header Seite 2 -->
+<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<tr>
+<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
+<td style="text-align: right;">${student.name || ''}</td>
+</tr>
+</table>
+</div>
+
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">Inhaltsverzeichnis</p>
 <div style="margin: 12pt 0; font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%;">
 <p style="margin: 4pt 0; line-height: 150%;">1. Auftragsklärung</p>
@@ -3153,8 +3182,23 @@ L-2165 Luxembourg
 <p style="margin: 4pt 0 4pt 24pt; line-height: 150%;">6.3 Produktionen des Schülers/der Schülerin</p>
 </div>
 
-<!-- SEITE 3: Auftragsklärung & Anamnese -->
+<!-- Footer Seite 2 -->
+<div style="width: 100%; border-top: 1pt solid #BFBFBF; padding-top: 6pt; margin-top: 24pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080; text-align: center;">
+Seite 2
+</div>
+
+<!-- ========== SEITE 3: Auftragsklärung & Anamnese ========== -->
 <p style="page-break-before: always;"></p>
+
+<!-- Header Seite 3 -->
+<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<tr>
+<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
+<td style="text-align: right;">${student.name || ''}</td>
+</tr>
+</table>
+</div>
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 14pt; color: #5B9BD5; margin: 0 0 6pt 0;">1. Auftragsklärung</p>
 <p style="font-family: Calibri, sans-serif; font-size: 11pt; line-height: 150%; margin: 0 0 8pt 0;">Das Zentrum für sozio-emotionale Entwicklung wurde am <i style="color: #000000;">(Datum)</i> von der nationalen Kommission zur Inklusion (CNI) damit beauftragt, eine vertiefende Diagnostik bei <i style="color: #000000;">(Name des/der Schülers/Schülerin)</i> durchzuführen, um dessen aktuellen sozio-emotionalen Entwicklungsstand und Förderbedarf festzustellen. Der Anlass für die Beauftragung ist/sind <i style="color: #000000;">(spezifische Auffälligkeiten aus dem CI-Dokument kurz benennen)</i> in der Schule und/oder zu Hause, mit dem Anliegen eine <i style="color: #000000;">(ISA / Conseil & Guidance / CST)</i> einzuleiten. Die Anfrage erfolgte auf Empfehlung der betreuenden Fachkraft / Lehrperson / Arzt/Ärztin und/oder auf Wunsch der Eltern.</p>
 
@@ -3253,8 +3297,19 @@ Unité de diagnostic, de conseil et de suivi</p>
 <tr><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td><td style="border: 1pt solid #000000; padding: 6pt 8pt;">&nbsp;</td></tr>
 </table>
 
-<!-- SEITE 8: Testergebnisse (ELDiB) -->
+<!-- ========== SEITE: ELDiB-RASTER (ALLEINSTEHEND) ========== -->
 <p style="page-break-before: always;"></p>
+
+<!-- Header ELDiB-Raster Seite -->
+<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<tr>
+<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
+<td style="text-align: right;">${student.name || ''}</td>
+</tr>
+</table>
+</div>
+
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 0 0 4pt 0;">6.2 Testergebnisse</p>
 
 <p style="text-align: center; font-family: Calibri, sans-serif; font-weight: bold; font-size: 11pt; margin: 8pt 0;">Zusammenfassung der Entwicklungsziele des ELDiB ©</p>
@@ -3284,8 +3339,23 @@ ${generateDSGridHTML(gridData)}
 © deutsche Ausgabe: Institut für Entwicklungstherapie/Entwicklungspädagogik e.V. (ETEP Europe) und Marita Bergsson
 </div>
 
-<!-- NEUE SEITE: Visueller Altersvergleich -->
+<!-- Footer ELDiB-Raster Seite -->
+<div style="width: 100%; border-top: 1pt solid #BFBFBF; padding-top: 6pt; margin-top: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080; text-align: center;">
+ELDiB-Raster
+</div>
+
+<!-- ========== NEUE SEITE: Visueller Altersvergleich ========== -->
 <p style="page-break-before: always;"></p>
+
+<!-- Header Altersvergleich Seite -->
+<div style="width: 100%; border-bottom: 1pt solid #BFBFBF; padding-bottom: 6pt; margin-bottom: 12pt; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<table style="width: 100%; font-family: Calibri, sans-serif; font-size: 9pt; color: #808080;">
+<tr>
+<td style="text-align: left;">Spezialisierte Diagnostik - CDSE</td>
+<td style="text-align: right;">${student.name || ''}</td>
+</tr>
+</table>
+</div>
 <p style="font-family: Calibri Light, Calibri, sans-serif; font-size: 12pt; color: #5B9BD5; margin: 0 0 4pt 0;">6.2 Testergebnisse (Fortsetzung) - Visueller Altersvergleich</p>
 
 <p style="font-family: Calibri, sans-serif; font-weight: bold; font-size: 11pt; margin-bottom: 12pt; border-bottom: 2pt solid #5B9BD5; padding-bottom: 6pt;">Visueller Altersvergleich pro Bereich</p>
